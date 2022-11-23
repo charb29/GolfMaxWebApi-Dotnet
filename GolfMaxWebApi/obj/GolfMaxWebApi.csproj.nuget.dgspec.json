@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\laxlo\\source\\repos\\GolfMaxWebApi\\GolfMaxWebApi\\GolfMaxWebApi.csproj": {}
+    "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj": {}
   },
   "projects": {
-    "c:\\Users\\laxlo\\source\\repos\\GolfMaxWebApi\\GolfMaxWebApi\\GolfMaxWebApi.csproj": {
+    "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\laxlo\\source\\repos\\GolfMaxWebApi\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
+        "projectUniqueName": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
         "projectName": "GolfMaxWebApi",
-        "projectPath": "c:\\Users\\laxlo\\source\\repos\\GolfMaxWebApi\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
+        "projectPath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
         "packagesPath": "C:\\Users\\laxlo\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\laxlo\\source\\repos\\GolfMaxWebApi\\GolfMaxWebApi\\obj\\",
+        "outputPath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -66,6 +66,10 @@
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
               "version": "[17.5.0-preview-20221003-04, )"
+            },
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.17.0, )"
             },
             "Moq": {
               "target": "Package",

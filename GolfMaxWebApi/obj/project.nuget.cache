@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "w4Vj2ssvFPZArkcsMAIXJeU+CtBy2rNkU575lAbWBeWxxT2kmie00sc0p+UZsib/y7MrdJTAnyBEpBthywGWKg==",
+  "dgSpecHash": "v7BlW11hc7wj1L67auho/0y4X0UcX8qZbh6E4uyl3zVJuhy+yUBFkonBuvrNwFC472+0WFbkGsJ1CXk0IwojKA==",
   "success": true,
-  "projectFilePath": "c:\\Users\\laxlo\\source\\repos\\GolfMaxWebApi\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
+  "projectFilePath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\laxlo\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\laxlo\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
@@ -53,6 +53,7 @@
     "C:\\Users\\laxlo\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\laxlo\\.nuget\\packages\\microsoft.testplatform.objectmodel\\17.5.0-preview-20221003-04\\microsoft.testplatform.objectmodel.17.5.0-preview-20221003-04.nupkg.sha512",
     "C:\\Users\\laxlo\\.nuget\\packages\\microsoft.testplatform.testhost\\17.5.0-preview-20221003-04\\microsoft.testplatform.testhost.17.5.0-preview-20221003-04.nupkg.sha512",
+    "C:\\Users\\laxlo\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.17.0\\microsoft.visualstudio.azure.containers.tools.targets.1.17.0.nupkg.sha512",
     "C:\\Users\\laxlo\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\laxlo\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\laxlo\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
