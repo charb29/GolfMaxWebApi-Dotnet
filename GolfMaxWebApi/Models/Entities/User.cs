@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace GolfMaxWebApi.Models.Entities
 {
     public partial class User

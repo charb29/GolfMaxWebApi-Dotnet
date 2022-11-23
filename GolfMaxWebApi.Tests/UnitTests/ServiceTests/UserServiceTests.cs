@@ -1,16 +1,11 @@
 using GolfMaxWebApi.Models.Entities;
 using Xunit;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using GolfMaxWebApi.Repositories.Interfaces;
-using GolfMaxWebApi.Repositories.Implementations;
-using GolfMaxWebApi.Services.Interfaces;
 using GolfMaxWebApi.Services.Implementations;
 
-namespace GolfMaxWebApi.Tests
+namespace GolfMaxWebApi.Tests.UnitTests.ServiceTests
 {
     public class UserServiceTests
     {
@@ -50,12 +45,12 @@ namespace GolfMaxWebApi.Tests
 
             var mockRepo = new Mock<IUserRepository>();
             var mockLogger = new Mock<ILogger<UserService>>();
+            var expected = users;
 
             mockRepo.Setup(repo => repo.FindAll()).ReturnsAsync(users);
 
             var sut = new UserService(mockRepo.Object, mockLogger.Object);
             var actual = await sut.GetAll();
-            var expected = users;
 
             Assert.Equal(expected, actual);
             mockRepo.Verify(repo => repo.FindAll(), Times.Once());
@@ -91,12 +86,12 @@ namespace GolfMaxWebApi.Tests
 
             var mockRepo = new Mock<IUserRepository>();
             var mockLogger = new Mock<ILogger<UserService>>();
+            var expected = user;
 
             mockRepo.Setup(repo => repo.FindByUserId(1)).ReturnsAsync(user);
 
             var sut = new UserService(mockRepo.Object, mockLogger.Object);
             var actual = await sut.GetById(1);
-            var expected = user;
 
             Assert.Equal(expected, actual);
             mockRepo.Verify(repo => repo.FindByUserId(1), Times.Once());
@@ -107,7 +102,6 @@ namespace GolfMaxWebApi.Tests
         {
             var user = new User
             {
-                Id = 1,
                 FirstName = "Ike",
                 LastName = "Broflovski",
                 Username = "Ike",
@@ -117,15 +111,15 @@ namespace GolfMaxWebApi.Tests
 
             var mockRepo = new Mock<IUserRepository>();
             var mockLogger = new Mock<ILogger<UserService>>();
+            var expected = user;
 
-            mockRepo.Setup(repo => repo.Save(It.IsAny<User>())).ReturnsAsync(user);
+            mockRepo.Setup(repo => repo.Save(user));
 
             var sut = new UserService(mockRepo.Object, mockLogger.Object);
             var actual = await sut.Create(user);
-            var expected = user;
 
             Assert.Equal(expected, actual);
-            mockRepo.Verify(repo => repo.Save(It.IsAny<User>()), Times.Once());
+            mockRepo.Verify(repo => repo.Save(user), Times.Once());
         }
 
         [Fact]
@@ -141,68 +135,8 @@ namespace GolfMaxWebApi.Tests
             var sut = new UserService(mockRepo.Object, mockLogger.Object);
             var result = sut.DeleteById(It.IsAny<int>());
 
-            Assert.ThrowsAsync<System.ArgumentNullException>(() => result);
+            Assert.ThrowsAsync<ArgumentNullException>(() => result);
             mockRepo.Verify(repo => repo.DeleteById(It.IsAny<int>()), Times.Once());
-        }
-
-        [Fact]
-        public async Task IsValidUsername_ShouldReturnTrue_IfUsernameIsAvailable()
-        {
-            var mockRepo = new Mock<IUserRepository>();
-            var mockLogger = new Mock<ILogger<UserService>>();
-
-            mockRepo.Setup(repo => repo.ExistsByUsername(It.IsAny<string>())).ReturnsAsync(true);
-
-            var sut = new UserService(mockRepo.Object, mockLogger.Object);
-            var result = await sut.IsValidUsername(It.IsAny<string>());
-
-            Assert.True(result);
-            mockRepo.Verify(repo => repo.ExistsByUsername(It.IsAny<string>()), Times.Once());
-        }
-
-        [Fact]
-        public async Task IsValidUsername_ShouldReturnFalse_IfUsernameTaken()
-        {
-            var mockRepo = new Mock<IUserRepository>();
-            var mockLogger = new Mock<ILogger<UserService>>();
-
-            mockRepo.Setup(repo => repo.ExistsByUsername(It.IsAny<string>())).ReturnsAsync(false);
-
-            var sut = new UserService(mockRepo.Object, mockLogger.Object);
-            var result = await sut.IsValidUsername(It.IsAny<string>());
-
-            Assert.False(result);
-            mockRepo.Verify(repo => repo.ExistsByUsername(It.IsAny<string>()), Times.Once());
-        }
-
-        [Fact]
-        public async Task IsValidEmail_ShouldReturnTrue_IfEmailIsAvailable()
-        {
-            var mockRepo = new Mock<IUserRepository>();
-            var mockLogger = new Mock<ILogger<UserService>>();
-
-            mockRepo.Setup(repo => repo.ExistsByEmail(It.IsAny<string>())).ReturnsAsync(true);
-
-            var sut = new UserService(mockRepo.Object, mockLogger.Object);
-            var result = await sut.IsValidEmail(It.IsAny<string>());
-
-            Assert.True(result);
-            mockRepo.Verify(repo => repo.ExistsByEmail(It.IsAny<string>()), Times.Once());
-        }
-
-        [Fact]
-        public async Task IsValidEmail_ShouldReturnFalse_IfEmailTaken()
-        {
-            var mockRepo = new Mock<IUserRepository>();
-            var mockLogger = new Mock<ILogger<UserService>>();
-
-            mockRepo.Setup(repo => repo.ExistsByEmail(It.IsAny<string>())).ReturnsAsync(false);
-
-            var sut = new UserService(mockRepo.Object, mockLogger.Object);
-            var result = await sut.IsValidEmail(It.IsAny<string>());
-
-            Assert.False(result);
-            mockRepo.Verify(repo => repo.ExistsByEmail(It.IsAny<string>()), Times.Once());
         }
 
         [Fact]
@@ -221,18 +155,14 @@ namespace GolfMaxWebApi.Tests
             var mockRepo = new Mock<IUserRepository>();
             var mockLogger = new Mock<ILogger<UserService>>();
 
-            mockRepo.Setup(repo => repo.ExistsByUsername(user.Username)).ReturnsAsync(true);
-            mockRepo
-                .Setup(repo => repo.GetPasswordUsingUsername(user.Username))
-                .ReturnsAsync(user.Password);
+            mockRepo.Setup(repo => repo.FindByUsername(user.Username)).ReturnsAsync(user);
 
             var sut = new UserService(mockRepo.Object, mockLogger.Object);
             var result = await sut.IsValidLoginRequest(user);
 
             Assert.True(result);
 
-            mockRepo.Verify(repo => repo.ExistsByUsername(It.IsAny<string>()), Times.Once());
-            mockRepo.Verify(repo => repo.GetPasswordUsingUsername(It.IsAny<string>()), Times.Once());
+            mockRepo.Verify(repo => repo.FindByUsername(user.Username), Times.Once());
         }
 
         [Fact]
@@ -251,16 +181,13 @@ namespace GolfMaxWebApi.Tests
             var mockRepo = new Mock<IUserRepository>();
             var mockLogger = new Mock<ILogger<UserService>>();
 
-            mockRepo.Setup(repo => repo.ExistsByUsername(It.IsAny<string>())).ReturnsAsync(false);
-            mockRepo
-                .Setup(repo => repo.GetPasswordUsingUsername(user.Username))
-                .ReturnsAsync(user.Password);
+            mockRepo.Setup(repo => repo.FindByUsername(It.IsAny<string>())).ReturnsAsync(It.IsAny<User>);
 
             var sut = new UserService(mockRepo.Object, mockLogger.Object);
             var result = await sut.IsValidLoginRequest(user);
 
             Assert.False(result);
-            mockRepo.Verify(repo => repo.ExistsByUsername(It.IsAny<string>()), Times.Once());
+            mockRepo.Verify(repo => repo.FindByUsername(It.IsAny<string>()), Times.Once());
         }
 
         [Fact]
@@ -279,8 +206,7 @@ namespace GolfMaxWebApi.Tests
             var mockRepo = new Mock<IUserRepository>();
             var mockLogger = new Mock<ILogger<UserService>>();
 
-            mockRepo.Setup(repo => repo.ExistsByUsername(It.IsAny<string>())).ReturnsAsync(false);
-            mockRepo.Setup(repo => repo.ExistsByEmail(It.IsAny<string>())).ReturnsAsync(false);
+            mockRepo.Setup(repo => repo.FindExistingUser(It.IsAny<User>())).ReturnsAsync(value: null);
 
             var sut = new UserService(mockRepo.Object, mockLogger.Object);
             var result = await sut.IsValidRegistrationRequest(user);
@@ -304,8 +230,7 @@ namespace GolfMaxWebApi.Tests
             var mockRepo = new Mock<IUserRepository>();
             var mockLogger = new Mock<ILogger<UserService>>();
 
-            mockRepo.Setup(repo => repo.ExistsByUsername(It.IsAny<string>())).ReturnsAsync(true);
-            mockRepo.Setup(repo => repo.ExistsByEmail(It.IsAny<string>())).ReturnsAsync(true);
+            mockRepo.Setup(repo => repo.FindExistingUser(user)).ReturnsAsync(user);
 
             var sut = new UserService(mockRepo.Object, mockLogger.Object);
             var result = await sut.IsValidRegistrationRequest(user);

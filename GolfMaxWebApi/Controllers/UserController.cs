@@ -28,14 +28,19 @@ namespace GolfMaxWebApi.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(204)]
         [ProducesResponseType(500)]
-        public async Task<ActionResult<List<UserDto>>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
             try
             {
                 var userRequest = await _userService.GetAll();
-                var userResponse = _userMapper.ConvertToUserDtoList(userRequest.ToList());
 
-                return userResponse.Count == 0 ? NoContent() : Ok(userResponse);
+                if (userRequest is null)
+                {
+                    return NoContent();
+                }
+
+                var userResponse = _userMapper.ConvertToUserDtoList(userRequest);
+                return Ok(userResponse);
             }
             catch (Exception ex)
             {
@@ -49,14 +54,13 @@ namespace GolfMaxWebApi.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
-        public async Task<ActionResult<UserDto>> GetUserById(int id)
+        public async Task<ActionResult> GetUserById(int id)
         {
             try
             {
                 var storedUser = await _userService.GetById(id);
-                var userResponse = _userMapper.ConvertToUserDto(storedUser);
 
-                if (userResponse == null)
+                if (storedUser is null)
                 {
                     return new ObjectResult(
                         new ProblemDetails
@@ -71,6 +75,8 @@ namespace GolfMaxWebApi.Controllers
                 }
                 else
                 {
+                    var userResponse = _userMapper.ConvertToUserDto(storedUser);
+
                     return Ok(userResponse);
                 }
             }
@@ -90,9 +96,10 @@ namespace GolfMaxWebApi.Controllers
             try
             {
                 var user = _userMapper.ConvertToEntity(userRequest);
-                var updatedUser = await _userService.Update(user, id);
+                await _userService.Update(user, id);
+                var result = _userMapper.ConvertToUserDto(user);
 
-                return Ok(updatedUser);
+                return Ok(result);
             }
             catch (Exception ex)
             {
@@ -120,7 +127,7 @@ namespace GolfMaxWebApi.Controllers
             {
                 var user = await _userService.GetById(id);
 
-                if (user == null)
+                if (user is null)
                 {
                     return new ObjectResult(
                         new ProblemDetails
@@ -210,8 +217,8 @@ namespace GolfMaxWebApi.Controllers
                 }
                 else
                 {
-                    var createdUser = await _userService.Create(user);
-                    var userResponse = _userMapper.ConvertToUserDto(createdUser);
+                    await _userService.Create(user);
+                    var userResponse = _userMapper.ConvertToUserDto(user);
                     return StatusCode(StatusCodes.Status201Created, userResponse);
                 }
             }

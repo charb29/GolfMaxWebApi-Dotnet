@@ -25,4 +25,8 @@
     <ProjectReference Include="..\GolfMaxWebApi\GolfMaxWebApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="IntegrationTests\" />
+  </ItemGroup>
+
 </Project>

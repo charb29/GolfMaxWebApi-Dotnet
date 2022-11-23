@@ -17,36 +17,32 @@ namespace GolfMaxWebApi.Services.Implementations
             _logger = logger;
         }
 
-        public async Task<List<User>> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
             _logger.LogInformation("Starting method 'GetAllUsers'");
-            return await _repository.FindAll();
+
+            var users = await _repository.FindAll();
+            return users;
         }
 
-        public async Task<User> Update(User userRequest, int id)
+        public async Task Update(User userRequest, int id)
         {
             _logger.LogInformation("Starting method 'Update'");
-            var user = await _repository.FindByUserId(id);
-
-            user.FirstName = userRequest.FirstName;
-            user.LastName = userRequest.LastName;
-            user.Username = userRequest.Username;
-            user.Password = userRequest.Password;
-            user.Email = userRequest.Email;
-
-            return await _repository.Update(user);
+            await _repository.Update(userRequest, id);
         }
 
-        public async Task<User> GetById(int id)
+        public async Task<User?> GetById(int id)
         {
             _logger.LogInformation("Starting method 'Update' with Id {id}", id);
-            return await _repository.FindByUserId(id);
+            var user = await _repository.FindByUserId(id);
+            return user;
         }
 
         public async Task<User> Create(User user)
         {
             _logger.LogInformation("Starting method 'Create' with user {user}", user);
-            return await _repository.Save(user);
+            await _repository.Save(user);
+            return user;
         }
 
         public async Task DeleteById(int id)
@@ -55,73 +51,30 @@ namespace GolfMaxWebApi.Services.Implementations
             await _repository.DeleteById(id);
         }
 
-        public async Task<bool> IsValidUsername(string username)
-        {
-            return await _repository.ExistsByUsername(username);
-        }
-
-        public async Task<bool> IsValidEmail(string email)
-        {
-            _logger.LogInformation("Querying email {email} from database", email);
-            return await _repository.ExistsByEmail(email);
-        }
-
         public async Task<bool> IsValidLoginRequest(User user)
         {
             _logger.LogInformation("Starting method 'IsValidLoginRequest' with user {user}", user);
+            string username = user.Username;
 
-            if (user.Username == null)
-                throw new ArgumentNullException(nameof(user));
+            if (username is null)
+                throw new ArgumentNullException(nameof(username));
 
-            bool usernameIsValid = await _repository.ExistsByUsername(user.Username);
+            var storedUser = await _repository.FindByUsername(username);
 
-            if (!usernameIsValid)
-            {
-                return false;
-            }
-            else
-            {
-                string password = await _repository.GetPasswordUsingUsername(user.Username);
-
-                _logger.LogInformation(
-                    "Retrieving user password {password} using username {username}",
-                    password,
-                    user.Username
-                );
-
-                return user.Password == password;
-            }
+            return user?.Password == storedUser?.Password;
         }
 
         public async Task<bool> IsValidRegistrationRequest(User user)
         {
-            _logger.LogWarning(
-                "Username {user.Username} and Email {user.Email} might be null.",
-                user.Username,
-                user.Email
-            );
-            string username = user.Username ?? throw new ArgumentNullException(nameof(user));
-            string email = user.Email ?? throw new ArgumentNullException(nameof(user));
+            var validEmailFormat = IsValidEmailFormat(user.Email);
+            if (!validEmailFormat) return false;
 
-            _logger.LogInformation(
-                "Validating username {username} and email {email} for Registration Request",
-                username,
-                email
-            );
-            bool usernameIsTaken = await UsernameExists(username);
-            bool emailIsTaken = await EmailExists(email);
+            var storedUser = await _repository.FindExistingUser(user);
 
-            return !usernameIsTaken && !emailIsTaken && IsValidEmailFormat(email);
-        }
-
-        private async Task<bool> UsernameExists(string username)
-        {
-            return await _repository.ExistsByUsername(username);
-        }
-
-        private async Task<bool> EmailExists(string email)
-        {
-            return await _repository.ExistsByEmail(email);
+            if (storedUser is null)
+                return true;
+            else
+                return false;
         }
 
         private bool IsValidEmailFormat(string email)

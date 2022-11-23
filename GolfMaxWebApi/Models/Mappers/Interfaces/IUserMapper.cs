@@ -6,7 +6,7 @@ namespace GolfMaxWebApi.Models.Mappers.Interfaces
     public interface IUserMapper
     {
         UserDto ConvertToUserDto(User user);
-        List<UserDto> ConvertToUserDtoList(List<User> users);
+        IEnumerable<UserDto> ConvertToUserDtoList(IEnumerable<User> users);
         User ConvertToEntity(UserDto userDto);
     }
 }

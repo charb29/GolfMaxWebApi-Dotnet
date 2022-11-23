@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using GolfMaxWebApi.Services.Implementations;
 
-namespace GolfMaxWebApi.Tests
+namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
 {
     public class UserControllerTests
     {
@@ -22,35 +22,35 @@ namespace GolfMaxWebApi.Tests
         public async Task GetAllUsers_ShouldReturn_200Ok()
         {
             var users = new List<User>
-        {
-            new User
             {
-                Id = 1,
-                FirstName = "Kenny",
-                LastName = "McCormick",
-                Username = "kmc",
-                Password = "password",
-                Email = "kenny@email.com"
-            },
-            new User
-            {
-                Id = 1,
-                FirstName = "Stan",
-                LastName = "Marsh",
-                Username = "sm",
-                Password = "password",
-                Email = "stan@email.com"
-            },
-            new User
-            {
-                Id = 1,
-                FirstName = "Eric",
-                LastName = "Cartman",
-                Username = "ec",
-                Password = "password",
-                Email = "ec@email.com"
-            }
-        };
+                new User
+                {
+                    Id = 1,
+                    FirstName = "Kenny",
+                    LastName = "McCormick",
+                    Username = "kmc",
+                    Password = "password",
+                    Email = "kenny@email.com"
+                },
+                new User
+                {
+                    Id = 1,
+                    FirstName = "Stan",
+                    LastName = "Marsh",
+                    Username = "sm",
+                    Password = "password",
+                    Email = "stan@email.com"
+                },
+                new User
+                {
+                    Id = 1,
+                    FirstName = "Eric",
+                    LastName = "Cartman",
+                    Username = "ec",
+                    Password = "password",
+                    Email = "ec@email.com"
+                }
+            };
 
             var mockUserService = new Mock<IUserService>();
             var mockUserMapper = new Mock<IUserMapper>();
@@ -65,9 +65,9 @@ namespace GolfMaxWebApi.Tests
             );
 
             var result = await sut.GetAllUsers();
-            var expected = Assert.IsType<ActionResult<List<UserDto>>>(result);
+            var expected = Assert.IsType<ActionResult<IEnumerable<UserDto>>>(result);
 
-            Assert.IsType<ObjectResult>(expected.Result);
+            Assert.IsType<OkObjectResult>(expected.Result);
         }
 
         [Fact]
@@ -77,7 +77,7 @@ namespace GolfMaxWebApi.Tests
             var mockUserMapper = new Mock<IUserMapper>();
             var mockLogger = new Mock<ILogger<UserController>>();
 
-            mockUserService.Setup(service => service.GetAll()).ReturnsAsync(new List<User>());
+            mockUserService.Setup(service => service.GetAll()).ReturnsAsync(value: null);
 
             var sut = new UserController(
                 mockUserService.Object,
@@ -86,9 +86,9 @@ namespace GolfMaxWebApi.Tests
             );
 
             var result = await sut.GetAllUsers();
-            var expected = Assert.IsType<ActionResult<List<UserDto>>>(result);
+            var expected = Assert.IsType<ActionResult<IEnumerable<UserDto>>>(result);
 
-            Assert.IsType<ObjectResult>(expected.Result);
+            Assert.IsType<NoContentResult>(expected.Result);
         }
 
         [Fact]
@@ -175,7 +175,7 @@ namespace GolfMaxWebApi.Tests
             var mockLogger = new Mock<ILogger<UserController>>();
             var mockUserMapper = new Mock<IUserMapper>();
 
-            mockUserService.Setup(service => service.Create(user)).ReturnsAsync(user);
+            mockUserService.Setup(service => service.Create(user));
             mockUserService
                 .Setup(service => service.IsValidRegistrationRequest(user))
                 .ReturnsAsync(true);

@@ -675,6 +675,7 @@
           }
         }
       },
+      "Microsoft.VisualStudio.Azure.Containers.Tools.Targets/1.17.0": {},
       "Microsoft.Win32.Primitives/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0",
@@ -1681,6 +1682,7 @@
           "Microsoft.Data.SqlClient": "5.0.1",
           "Microsoft.EntityFrameworkCore": "6.0.10",
           "Microsoft.NET.Test.Sdk": "17.5.0-preview-20221003-04",
+          "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.0",
           "Moq": "4.18.2",
           "MySql.Data": "8.0.31",
           "MySqlConnector": "2.1.13",
@@ -2030,6 +2032,13 @@
       "sha512": "sha512-p0tQUCn9UupTaVqFdFWDcDV82QiVRFMPuJ2/zxoEf6DtmeKDjZzB3AXkhTRM+eVkR1fMiW3TehhMh0T3TiUs9w==",
       "path": "microsoft.testplatform.testhost/17.5.0-preview-20221003-04",
       "hashPath": "microsoft.testplatform.testhost.17.5.0-preview-20221003-04.nupkg.sha512"
+    },
+    "Microsoft.VisualStudio.Azure.Containers.Tools.Targets/1.17.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gfDtAL1WhkjbRdbZlt/ZeQYCbgRpNCZCGj+yeqHObsNFRDHjq8qZJOX9AyTxJpSRYMi9SJk7JDyAbbVYRgEhAA==",
+      "path": "microsoft.visualstudio.azure.containers.tools.targets/1.17.0",
+      "hashPath": "microsoft.visualstudio.azure.containers.tools.targets.1.17.0.nupkg.sha512"
     },
     "Microsoft.Win32.Primitives/4.3.0": {
       "type": "package",

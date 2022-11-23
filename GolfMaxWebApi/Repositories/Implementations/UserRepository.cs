@@ -1,275 +1,142 @@
 ﻿using Dapper;
-using GolfMaxWebApi.Context;
+using System.Data;
+using GolfMaxWebApi.DataAccess;
 using GolfMaxWebApi.Models.Entities;
 using GolfMaxWebApi.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace GolfMaxWebApi.Repositories.Implementations
 {
     public class UserRepository : IUserRepository
     {
-        private readonly GolfMaxDbContext _context;
+        private readonly GolfMaxDataAccessor _dataAccessor;
 
-        public UserRepository(GolfMaxDbContext context)
+        public UserRepository(GolfMaxDataAccessor dataAccessor)
         {
-            _context = context;
+            _dataAccessor = dataAccessor;
         }
 
-        //public async Task<List<User>> FindAll()
-        //{
-        //    var connection = _context.Database.GetDbConnection();
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        const string query = "SELECT * FROM users";
-
-        //        var users = await connection.QueryAsync<User>(query);
-        //        return users.ToList();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        await connection.CloseAsync();
-        //    }
-        //}
-
-        //public async Task<User> FindByUserId(int id)
-        //{
-        //    var connection = _context.Database.GetDbConnection();
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        var query = $"SELECT * FROM users u WHERE u.id = {id}";
-
-        //        var user = await connection.QuerySingleAsync<User>(query);
-        //        return user;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        await connection.CloseAsync();
-        //    }
-        //}
-
-        //public async Task<User> FindByUsername(string username)
-        //{
-        //    var connection = _context.Database.GetDbConnection();
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        var query = $"SELECT * FROM users u WHERE u.username = {username}";
-
-        //        var user = await connection.QuerySingleAsync<User>(query);
-        //        return user;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        await connection.CloseAsync();
-        //    }
-        //}
-
-        //public async Task<User> Save(User user)
-        //{
-        //    var connection = _context.Database.GetDbConnection();
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        var query = "INSERT INTO users (username, first_name, last_name, password, email)"
-        //                    + $"VALUES ('{user.Username}', '{user.FirstName}', '{user.LastName}', '{user.Password}', '{user.Email}')";
-
-        //        var id = await connection.QueryFirstOrDefaultAsync<int>(query, user);
-        //        return new User
-        //        {
-        //            Id = id,
-        //            FirstName = user.FirstName,
-        //            LastName = user.LastName,
-        //            Password = user.Password,
-        //            Email = user.Email
-        //        };
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        await connection.CloseAsync();
-        //    }
-        //}
-
-        //public async Task<User> Update(User user)
-        //{
-        //    var connection = _context.Database.GetDbConnection();
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        var query = $"UPDATE users u SET u.username = '{user.Username}', " +
-        //                    $"u.email = '{user.Email}', u.password = '{user.Password}', " +
-        //                    $"u.first_name = '{user.FirstName}', u.last_name = '{user.LastName}' " +
-        //                    $"WHERE u.id = {user.Id};";
-        //        return await connection.QueryFirstOrDefaultAsync<User>(query, user);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        await connection.CloseAsync();
-        //    }
-        //}
-
-        //public async Task DeleteById(int id)
-        //{
-        //    var connection = _context.Database.GetDbConnection();
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        var query = $"DELETE * FROM users u WHERE u.id = {id}";
-
-        //        await connection.ExecuteAsync(query);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        await connection.CloseAsync();
-        //    }
-        //}
-
-        //public async Task<bool> ExistsByEmail(string email)
-        //{
-        //    var connection = _context.Database.GetDbConnection();
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        var query = $"SELECT COUNT(1) FROM users u WHERE u.email = '{email}'";
-
-        //        return await connection.QueryFirstOrDefaultAsync<bool>(query);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        await connection.CloseAsync();
-        //    }
-        //}
-
-        //public async Task<bool> ExistsByUsername(string username)
-        //{
-        //    var connection = _context.Database.GetDbConnection();
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        var query = $"SELECT COUNT(1) FROM users u WHERE u.username = '{username}'";
-
-        //        return await connection.QueryFirstOrDefaultAsync<bool>(query);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        await connection.CloseAsync();
-        //    }
-        //}
-
-
-        //public async Task<string> GetPasswordUsingUsername(string username)
-        //{
-        //    var connection = _context.Database.GetDbConnection();
-
-        //    try
-        //    {
-        //        await connection.OpenAsync();
-        //        var query = $"SELECT u.password FROM users u WHERE u.username = '{username}'";
-
-        //        return await connection.QueryFirstOrDefaultAsync<string>(query);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Console.WriteLine(e);
-        //        throw;
-        //    }
-        //    finally
-        //    {
-        //        await connection.CloseAsync();
-        //    }
-        //}
-        public async Task<List<User>> FindAll()
+        public async Task<IEnumerable<User>> FindAll()
         {
-            return await _context.Users.ToListAsync();
+            const string query = "SELECT * FROM users";
+
+            using var connection = _dataAccessor.CreateConnection();
+            var users = await connection.QueryAsync<User>(query);
+
+            return users;
         }
 
-        public async Task<User> FindByUserId(int id)
+        public async Task<User?> FindByUserId(int id)
         {
-            throw new NotImplementedException();
+            var query = "SELECT * FROM users WHERE id = @id";
+
+            using var connection = _dataAccessor.CreateConnection();
+            var user = await connection.QueryAsync<User>(query, new { id });
+
+            return user.SingleOrDefault();
         }
 
-        public async Task<User> FindByUsername(string username)
+        public async Task<User?> FindByUsername(string username)
         {
-            throw new NotImplementedException();
+            var query = "SELECT * FROM users u WHERE u.username = @username";
+
+            using var connection = _dataAccessor.CreateConnection();
+            var user = await connection.QueryAsync<User>(query, new { username });
+
+            return user.SingleOrDefault();
+        }
+
+        public async Task<User?> FindByEmail(string email)
+        {
+            var query = "SELECT * FROM users u WHERE u.email = @email";
+
+            using var connection = _dataAccessor.CreateConnection();
+            var user = await connection.QueryAsync(query, new { email });
+
+            return user.SingleOrDefault();
         }
 
         public async Task<User> Save(User user)
         {
-            throw new NotImplementedException();
+            var query = "INSERT INTO users (first_name, last_name, username, password, email)"
+                + " VALUES (@FirstName, @LastName, @Username, @Password, @Email)";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("FirstName", user.FirstName, DbType.String);
+            parameters.Add("LastName", user.LastName, DbType.String);
+            parameters.Add("Username", user.Username, DbType.String);
+            parameters.Add("Password", user.Password, DbType.String);
+            parameters.Add("Email", user.Email, DbType.String);
+
+            using var connection = _dataAccessor.CreateConnection();
+            var id = await connection.ExecuteAsync(query, parameters);
+
+            var createdUser = new User
+            {
+                Id = id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                Password = user.Password,
+                Email = user.Email,
+            };
+            return createdUser;
         }
 
-        public async Task<User> Update(User user)
+        public async Task Update(User user, int id)
         {
-            throw new NotImplementedException();
+            var query = "UPDATE users u SET"
+                + " u.first_name = @FirstName,"
+                + " u.last_name = @LastName,"
+                + " u.username = @Username,"
+                + " u.password = @Password,"
+                + " u.email = @Email"
+                + " WHERE u.id = @id";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("id", id, DbType.Int32);
+            parameters.Add("FirstName", user.FirstName, DbType.String);
+            parameters.Add("LastName", user.LastName, DbType.String);
+            parameters.Add("Username", user.Username, DbType.String);
+            parameters.Add("Password", user.Password, DbType.String);
+            parameters.Add("Email", user.Email, DbType.String);
+
+            using var connection = _dataAccessor.CreateConnection();
+            await connection.ExecuteAsync(query, parameters);
         }
 
         public async Task DeleteById(int id)
         {
-            throw new NotImplementedException();
+            var query = "DELETE FROM users u WHERE u.id = @id";
+
+            using var connection = _dataAccessor.CreateConnection();
+            await connection.ExecuteAsync(query, new { id });
         }
 
-        public async Task<bool> ExistsByUsername(string username)
+        public async Task<User?> FindExistingUser(User user)
         {
-            throw new NotImplementedException();
+            var query = "SELECT * FROM users u WHERE u.username = @username OR u.email = @email";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("username", user.Username, DbType.String);
+            parameters.Add("email", user.Email, DbType.String);
+
+            using var connection = _dataAccessor.CreateConnection();
+            var storedUser = await connection.QueryAsync<User>(query, parameters);
+
+            return storedUser.SingleOrDefault();
         }
 
-        public async Task<bool> ExistsByEmail(string email)
+        public async Task<string?> GetPasswordUsingUsername(string username)
         {
-            throw new NotImplementedException();
-        }
+            var query = "SELECT u.password FROM users u WHERE u.username = @username";
 
-        public async Task<string> GetPasswordUsingUsername(string username)
-        {
-            throw new NotImplementedException();
+            var parameters = new DynamicParameters();
+            parameters.Add("username", username, DbType.String);
+
+            using var connection = _dataAccessor.CreateConnection();
+            var storedPassword = await connection.QueryAsync<string>(query, parameters);
+
+            return storedPassword.SingleOrDefault();
         }
     }
 }

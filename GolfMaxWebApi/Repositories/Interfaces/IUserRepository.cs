@@ -4,14 +4,14 @@ namespace GolfMaxWebApi.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<List<User>> FindAll();
-        Task<User> FindByUserId(int id);
-        Task<User> FindByUsername(string username);
+        Task<IEnumerable<User>> FindAll();
+        Task<User?> FindByUserId(int id);
+        Task<User?> FindByUsername(string username);
+        Task<User?> FindByEmail(string email);
         Task<User> Save(User user);
-        Task<User> Update(User user);
+        Task Update(User user, int id);
         Task DeleteById(int id);
-        Task<bool> ExistsByUsername(string username);
-        Task<bool> ExistsByEmail(string email);
-        Task<string> GetPasswordUsingUsername(string username);
+        Task<User?> FindExistingUser(User user);
+        Task<string?> GetPasswordUsingUsername(string username);
     }
 }
