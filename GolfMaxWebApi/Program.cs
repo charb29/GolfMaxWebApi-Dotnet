@@ -5,7 +5,6 @@ using GolfMaxWebApi.Repositories.Implementations;
 using GolfMaxWebApi.Repositories.Interfaces;
 using GolfMaxWebApi.Services.Implementations;
 using GolfMaxWebApi.Services.Interfaces;
-using Microsoft.Identity.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserMapper, UserMapper>();
 builder.Services.AddScoped<GolfMaxDataAccessor>();
@@ -36,3 +36,4 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
+

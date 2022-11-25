@@ -12,6 +12,9 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public UserRepository(GolfMaxDataAccessor dataAccessor)
         {
+            if (dataAccessor is null)
+                throw new ArgumentNullException(nameof(dataAccessor));
+
             _dataAccessor = dataAccessor;
         }
 

@@ -10,6 +10,8 @@ namespace GolfMaxWebApi.Models.Mappers.Implementations
         {
             return new UserDto
             {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Username = user.Username,
                 Email = user.Email
             };

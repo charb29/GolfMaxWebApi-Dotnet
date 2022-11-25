@@ -1,5 +1,4 @@
-﻿
-namespace GolfMaxWebApi.Models.Entities
+﻿namespace GolfMaxWebApi.Models.Entities
 {
     public partial class User
     {

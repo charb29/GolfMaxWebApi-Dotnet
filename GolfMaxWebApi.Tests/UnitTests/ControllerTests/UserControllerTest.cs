@@ -1,18 +1,12 @@
 using Xunit;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using GolfMaxWebApi.Models.Entities;
-using GolfMaxWebApi.Repositories.Interfaces;
-using GolfMaxWebApi.Repositories.Implementations;
 using GolfMaxWebApi.Services.Interfaces;
 using GolfMaxWebApi.Controllers;
 using GolfMaxWebApi.Models.Dtos;
 using GolfMaxWebApi.Models.Mappers.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
-using GolfMaxWebApi.Services.Implementations;
 
 namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
 {
@@ -116,9 +110,9 @@ namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
             );
 
             var result = await sut.GetUserById(1);
-            var expected = Assert.IsType<ActionResult<UserDto>>(result);
+            var expected = Assert.IsType<OkObjectResult>(result);
 
-            Assert.IsType<ObjectResult>(expected.Result);
+            Assert.IsType<OkObjectResult>(expected);
         }
 
         [Fact]
@@ -137,7 +131,7 @@ namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
             var mockUserMapper = new Mock<IUserMapper>();
             var mockLogger = new Mock<ILogger<UserController>>();
 
-            mockUserService.Setup(service => service.GetById(1)).ReturnsAsync(user);
+            mockUserService.Setup(service => service.GetById(1)).ReturnsAsync(value: null);
 
             var sut = new UserController(
                 mockUserService.Object,
@@ -146,9 +140,9 @@ namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
             );
 
             var result = await sut.GetUserById(1);
-            var expected = Assert.IsType<ActionResult<UserDto>>(result);
+            var expected = Assert.IsType<ObjectResult>(result);
 
-            Assert.IsType<ObjectResult>(expected.Result);
+            Assert.IsType<ObjectResult>(expected);
         }
 
         [Fact]
