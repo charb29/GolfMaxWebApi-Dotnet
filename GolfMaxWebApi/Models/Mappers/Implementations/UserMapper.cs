@@ -33,9 +33,8 @@ namespace GolfMaxWebApi.Models.Mappers.Implementations
             {
                 FirstName = userDto.FirstName,
                 LastName = userDto.LastName,
-                Username = userDto.Username,
-                Email = userDto.Email,
-
+                Username = userDto.Username ?? throw new ArgumentNullException(nameof(userDto.Username)),
+                Email = userDto.Email ?? throw new ArgumentNullException(nameof(userDto.Email)),
             };
         }
     }

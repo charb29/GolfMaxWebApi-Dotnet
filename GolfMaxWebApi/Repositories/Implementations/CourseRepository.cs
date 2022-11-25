@@ -54,80 +54,31 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public async Task<Course> Save(Course course)
         {
-            var courseQuery = "INSERT INTO courses (course_name) VALUES (@CourseName)";
+            var courseQuery = "INSERT INTO courses (course_name)"
+                + " VALUES (@CourseName)";
+            var holeLayoutQuery = "INSERT INTO hole_layouts ("
+                + " front_9_yards, back_9_yards, overall_par,"
+                + " course_rating, slope_rating, layout_type"
+                + " course_id)"
+                + " VALUES (@Front9Yards, @Back9Yards, @OverallPar"
+                + " @CourseRating, @SlopeRating, @LaoutType)";
+            var holeQuery = "INSERT INTO holes ("
+                + " par, yards, hole_number)"
+                + " VALUES (@Par, @Yards, @HoleNumber)";
 
             var parameters = new DynamicParameters();
             parameters.Add("CourseName", course.CourseName, DbType.String);
 
             using var connection = _dataAccessor.CreateConnection();
             var courseId = await connection.ExecuteAsync(courseQuery, parameters);
-
-            var holeLayouts = new List<HoleLayout>();
-            var holes = new List<Hole>();
-
-            foreach (HoleLayout holeLayout in course.HoleLayouts)
-            {
-                var holeLayoutQuery = "INSERT INTO hole_layouts ("
-                    + " overall_par, course_rating,"
-                    + " slope_rating, front_9_yards,"
-                    + " back_9_yards, layout_type, course_id)"
-                    + " VALUES (@OverallPar, @CourseRating,"
-                    + " @SlopeRating, @Front9Yards,"
-                    + " @Back9Yards, @LayoutType, @Course)";
-
-                parameters.Add("OverallPar", holeLayout.OverallPar, DbType.Int32);
-                parameters.Add("CourseRating", holeLayout.CourseRating, DbType.Decimal);
-                parameters.Add("SlopeRating", holeLayout.SlopeRating, DbType.Decimal);
-                parameters.Add("Front9Yards", holeLayout.Front9Yards, DbType.Decimal);
-                parameters.Add("Back9Yards", holeLayout.Back9Yards, DbType.Decimal);
-                parameters.Add("LayoutType", holeLayout.LayoutType, DbType.String);
-                parameters.Add("Course", courseId, DbType.Int16);
-
-                var holeLayoutId = await connection.ExecuteAsync(holeLayoutQuery, parameters);
-
-                foreach (Hole hole in holeLayout.Holes)
-                {
-                    var holeQuery = "INSERT INTO holes ("
-                        + " hole_number, yards, par,"
-                        + " hole_layout_id, course_id"
-                        + "VALUES (@HoleNumber, @Yards"
-                        + " @Par, @HoleLayout, @Course)";
-
-                    parameters.Add("HoleNumber", hole.HoleNumber, DbType.Int16);
-                    parameters.Add("Yards", hole.Yards, DbType.Int16);
-                    parameters.Add("Par", hole.Par, DbType.Int16);
-                    parameters.Add("HoleLayout", holeLayoutId, DbType.Int16);
-                    parameters.Add("Course", courseId, DbType.Int16);
-
-                    var holeId = await connection.ExecuteAsync(holeQuery, parameters);
-
-                    holes.Add(new Hole
-                    {
-                        Id = holeId,
-                        Yards = hole.Par,
-                        HoleLayout = holeLayout,
-                        Course = hole.Course
-                    });
-                }
-
-                holeLayouts.Add(new HoleLayout
-                {
-                    Id = holeLayoutId,
-                    CourseRating = holeLayout.CourseRating,
-                    SlopeRating = holeLayout.SlopeRating,
-                    Front9Yards = holeLayout.Front9Yards,
-                    Back9Yards = holeLayout.Back9Yards,
-                    LayoutType = holeLayout.LayoutType,
-                    Course = holeLayout.Course,
-                    Holes = holes
-                });
-            }
+            var holeLayoutId = await connection.ExecuteAsync(holeLayoutQuery, course.HoleLayouts);
+            var holeId = await connection.ExecuteAsync(holeQuery, course.HoleLayouts.SelectMany(h => h.Holes));
 
             return new Course
             {
                 Id = courseId,
                 CourseName = course.CourseName,
-                HoleLayouts = holeLayouts
+                HoleLayouts = course.HoleLayouts
             };
         }
 
