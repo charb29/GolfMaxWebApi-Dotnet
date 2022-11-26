@@ -63,26 +63,18 @@ namespace GolfMaxWebApi.Repositories.Implementations
             var query = "INSERT INTO users (first_name, last_name, username, password, email)"
                 + " VALUES (@FirstName, @LastName, @Username, @Password, @Email)";
 
-            var parameters = new DynamicParameters();
-            parameters.Add("FirstName", user.FirstName, DbType.String);
-            parameters.Add("LastName", user.LastName, DbType.String);
-            parameters.Add("Username", user.Username, DbType.String);
-            parameters.Add("Password", user.Password, DbType.String);
-            parameters.Add("Email", user.Email, DbType.String);
-
             using var connection = _dataAccessor.CreateConnection();
-            var id = await connection.ExecuteAsync(query, parameters);
+            var id = await connection.ExecuteAsync(query, user);
 
-            var createdUser = new User
+            return new User
             {
                 Id = id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                Email = user.Email,
                 Username = user.Username,
                 Password = user.Password,
-                Email = user.Email,
             };
-            return createdUser;
         }
 
         public async Task Update(User user, int id)

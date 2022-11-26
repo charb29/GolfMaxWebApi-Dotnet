@@ -25,10 +25,11 @@ namespace GolfMaxWebApi.Services.Implementations
             return users;
         }
 
-        public async Task Update(User userRequest, int id)
+        public async Task<User> Update(User user, int id)
         {
             _logger.LogInformation("Starting method 'Update'");
-            await _repository.Update(userRequest, id);
+            await _repository.Update(user, id);
+            return user;
         }
 
         public async Task<User?> GetById(int id)

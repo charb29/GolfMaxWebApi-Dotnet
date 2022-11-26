@@ -9,7 +9,7 @@ namespace GolfMaxWebApi.Models.Entities
         public double CourseRating { get; set; }
         public double SlopeRating { get; set; }
         public LayoutType LayoutType { get; set; }
+
         public Course Course { get; set; }
-        public List<Hole> Holes { get; set; }
     }
 }

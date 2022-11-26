@@ -96,8 +96,8 @@ namespace GolfMaxWebApi.Controllers
             try
             {
                 var user = _userMapper.ConvertToEntity(userRequest);
-                await _userService.Update(user, id);
-                var result = _userMapper.ConvertToUserDto(user);
+                var updatedUser = await _userService.Update(user, id);
+                var result = _userMapper.ConvertToUserDto(updatedUser);
 
                 return Ok(result);
             }
@@ -217,8 +217,8 @@ namespace GolfMaxWebApi.Controllers
                 }
                 else
                 {
-                    await _userService.Create(user);
-                    var userResponse = _userMapper.ConvertToUserDto(user);
+                    var createdUser = await _userService.Create(user);
+                    var userResponse = _userMapper.ConvertToUserDto(createdUser);
                     return StatusCode(StatusCodes.Status201Created, userResponse);
                 }
             }
