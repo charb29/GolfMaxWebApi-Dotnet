@@ -18,28 +18,31 @@ namespace GolfMaxWebApi.Services.Implementations
             _courseRepository = courseRepository;
         }
 
-        public Task<IEnumerable<Course>> GetAll()
+        public async Task<IEnumerable<Course>> GetAll()
         {
-            throw new NotImplementedException();
+            var courses = await _courseRepository.FindAll();
+            return courses.ToList();
         }
 
-        public Task<Course?> GetByCourseId(int id)
+        public async Task<Course?> GetByCourseId(int id)
         {
-            throw new NotImplementedException();
+            var course = await _courseRepository.FindByCourseId(id);
+            return course;
         }
 
-        public Task<Course?> GetByCourseName(string courseName)
+        public async Task<Course?> GetByCourseName(string courseName)
         {
-            throw new NotImplementedException();
+            var course = await _courseRepository.FindByCourseName(courseName);
+            return course;
         }
         public Task<Course> CreateCourse(Course course)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteById(int id)
+        public async Task DeleteById(int id)
         {
-            throw new NotImplementedException();
+            await _courseRepository.DeleteById(id);
         }
 
         public Task<Course> UpdateCourse(Course course, int id)

@@ -9,52 +9,43 @@ namespace GolfMaxWebApi.Services.Implementations
     public class UserService : IUserService
     {
         private readonly IUserRepository _repository;
-        private readonly ILogger<UserService> _logger;
 
-        public UserService(IUserRepository userRepository, ILogger<UserService> logger)
+        public UserService(IUserRepository userRepository)
         {
             _repository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
-            _logger = logger;
         }
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            _logger.LogInformation("Starting method 'GetAllUsers'");
-
             var users = await _repository.FindAll();
             return users;
         }
 
         public async Task<User> Update(User user, int id)
         {
-            _logger.LogInformation("Starting method 'Update'");
             await _repository.Update(user, id);
             return user;
         }
 
         public async Task<User?> GetById(int id)
         {
-            _logger.LogInformation("Starting method 'Update' with Id {id}", id);
             var user = await _repository.FindByUserId(id);
             return user;
         }
 
         public async Task<User> Create(User user)
         {
-            _logger.LogInformation("Starting method 'Create' with user {user}", user);
-            await _repository.Save(user);
-            return user;
+            var createdUser = await _repository.Save(user);
+            return createdUser;
         }
 
         public async Task DeleteById(int id)
         {
-            _logger.LogInformation("Deleting user using Id {id}", id);
             await _repository.DeleteById(id);
         }
 
         public async Task<bool> IsValidLoginRequest(User user)
         {
-            _logger.LogInformation("Starting method 'IsValidLoginRequest' with user {user}", user);
             string username = user.Username;
 
             if (username is null)
@@ -72,10 +63,7 @@ namespace GolfMaxWebApi.Services.Implementations
 
             var storedUser = await _repository.FindExistingUser(user);
 
-            if (storedUser is null)
-                return true;
-            else
-                return false;
+            return storedUser == null;
         }
 
         private bool IsValidEmailFormat(string email)
@@ -103,15 +91,15 @@ namespace GolfMaxWebApi.Services.Implementations
                     return match.Groups[1].Value + domainName;
                 }
             }
-            catch (RegexMatchTimeoutException ex)
+            catch (RegexMatchTimeoutException)
             {
-                _logger.LogError("Regex Match Timeout Exception {ex}", ex);
                 return false;
+                throw new RegexMatchTimeoutException();
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
-                _logger.LogError("Argument Exception {ex}", ex);
                 return false;
+                throw new ArgumentException();
             }
 
             try
@@ -126,6 +114,7 @@ namespace GolfMaxWebApi.Services.Implementations
             catch (RegexMatchTimeoutException)
             {
                 return false;
+                throw new RegexMatchTimeoutException();
             }
         }
     }

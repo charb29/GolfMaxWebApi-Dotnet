@@ -33,9 +33,9 @@ namespace GolfMaxWebApi.Repositories.Implementations
             var query = "SELECT * FROM users WHERE id = @id";
 
             using var connection = _dataAccessor.CreateConnection();
-            var user = await connection.QueryAsync<User>(query, new { id });
+            var user = await connection.QuerySingleOrDefaultAsync<User>(query, new { id });
 
-            return user.SingleOrDefault();
+            return user;
         }
 
         public async Task<User?> FindByUsername(string username)
@@ -43,9 +43,9 @@ namespace GolfMaxWebApi.Repositories.Implementations
             var query = "SELECT * FROM users u WHERE u.username = @username";
 
             using var connection = _dataAccessor.CreateConnection();
-            var user = await connection.QueryAsync<User>(query, new { username });
+            var user = await connection.QuerySingleOrDefaultAsync<User>(query, new { username });
 
-            return user.SingleOrDefault();
+            return user;
         }
 
         public async Task<User?> FindByEmail(string email)
@@ -53,18 +53,19 @@ namespace GolfMaxWebApi.Repositories.Implementations
             var query = "SELECT * FROM users u WHERE u.email = @email";
 
             using var connection = _dataAccessor.CreateConnection();
-            var user = await connection.QueryAsync(query, new { email });
+            var user = await connection.QuerySingleOrDefaultAsync(query, new { email });
 
-            return user.SingleOrDefault();
+            return user;
         }
 
         public async Task<User> Save(User user)
         {
             var query = "INSERT INTO users (first_name, last_name, username, password, email)"
-                + " VALUES (@FirstName, @LastName, @Username, @Password, @Email)";
+                + " VALUES (@FirstName, @LastName, @Username, @Password, @Email);"
+                + " SELECT LAST_INSERT_ID();";
 
             using var connection = _dataAccessor.CreateConnection();
-            var id = await connection.ExecuteAsync(query, user);
+            var id = await connection.QuerySingleAsync<int>(query, user);
 
             return new User
             {
@@ -116,9 +117,9 @@ namespace GolfMaxWebApi.Repositories.Implementations
             parameters.Add("email", user.Email, DbType.String);
 
             using var connection = _dataAccessor.CreateConnection();
-            var storedUser = await connection.QueryAsync<User>(query, parameters);
+            var storedUser = await connection.QuerySingleOrDefaultAsync<User>(query, parameters);
 
-            return storedUser.SingleOrDefault();
+            return storedUser;
         }
 
         public async Task<string?> GetPasswordUsingUsername(string username)
@@ -129,9 +130,9 @@ namespace GolfMaxWebApi.Repositories.Implementations
             parameters.Add("username", username, DbType.String);
 
             using var connection = _dataAccessor.CreateConnection();
-            var storedPassword = await connection.QueryAsync<string>(query, parameters);
+            var storedPassword = await connection.QuerySingleOrDefaultAsync<string>(query, parameters);
 
-            return storedPassword.SingleOrDefault();
+            return storedPassword;
         }
     }
 }

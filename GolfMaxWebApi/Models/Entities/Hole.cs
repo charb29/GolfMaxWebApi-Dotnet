@@ -6,8 +6,7 @@ namespace GolfMaxWebApi.Models.Entities
         public int HoleNumber { get; set; }
         public int Yards { get; set; }
         public int Par { get; set; }
-
-        public HoleLayout HoleLayout { get; set; }
-        public Course Course { get; set; }
+        public int CourseId { get; set; }
+        public int HoleLayoutId { get; set; }
     }
 }
