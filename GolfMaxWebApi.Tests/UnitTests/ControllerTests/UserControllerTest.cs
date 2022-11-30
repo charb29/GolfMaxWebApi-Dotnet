@@ -1,4 +1,3 @@
-using Xunit;
 using Moq;
 using GolfMaxWebApi.Models.Entities;
 using GolfMaxWebApi.Services.Interfaces;
@@ -52,11 +51,7 @@ namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
 
             mockUserService.Setup(service => service.GetAll()).ReturnsAsync(users);
 
-            var sut = new UserController(
-                mockUserService.Object,
-                mockUserMapper.Object,
-                mockLogger.Object
-            );
+            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
 
             var result = await sut.GetAllUsers();
             var expected = Assert.IsType<ActionResult<IEnumerable<UserDto>>>(result);
@@ -65,19 +60,15 @@ namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
         }
 
         [Fact]
-        public async Task GetAllUsers_ShouldReturn_204NoContent()
+        public async Task GetAllUsers_ShouldReturn_204NoContent_IfListIsNull()
         {
             var mockUserService = new Mock<IUserService>();
             var mockUserMapper = new Mock<IUserMapper>();
             var mockLogger = new Mock<ILogger<UserController>>();
 
-            mockUserService.Setup(service => service.GetAll()).ReturnsAsync(value: null);
+            mockUserService.Setup(service => service.GetAll())!.ReturnsAsync(value: null);
 
-            var sut = new UserController(
-                mockUserService.Object,
-                mockUserMapper.Object,
-                mockLogger.Object
-            );
+            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
 
             var result = await sut.GetAllUsers();
             var expected = Assert.IsType<ActionResult<IEnumerable<UserDto>>>(result);
@@ -103,11 +94,7 @@ namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
 
             mockUserService.Setup(service => service.GetById(1)).ReturnsAsync(user);
 
-            var sut = new UserController(
-                mockUserService.Object,
-                mockUserMapper.Object,
-                mockLogger.Object
-            );
+            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
 
             var result = await sut.GetUserById(1);
             var expected = Assert.IsType<OkObjectResult>(result);
@@ -118,26 +105,13 @@ namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
         [Fact]
         public async Task GetUserById_ShouldReturn_404NotFoundIfUserIsNotFound()
         {
-            var user = new User
-            {
-                FirstName = "Eric",
-                LastName = "Cartman",
-                Username = "ec",
-                Password = "password",
-                Email = "ec@email.com"
-            };
-
             var mockUserService = new Mock<IUserService>();
             var mockUserMapper = new Mock<IUserMapper>();
             var mockLogger = new Mock<ILogger<UserController>>();
 
             mockUserService.Setup(service => service.GetById(1)).ReturnsAsync(value: null);
 
-            var sut = new UserController(
-                mockUserService.Object,
-                mockUserMapper.Object,
-                mockLogger.Object
-            );
+            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
 
             var result = await sut.GetUserById(1);
             var expected = Assert.IsType<ObjectResult>(result);
@@ -175,11 +149,7 @@ namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
                 .ReturnsAsync(true);
             mockUserMapper.Setup(mapper => mapper.ConvertToEntity(userDto)).Returns(user);
 
-            var sut = new UserController(
-                mockUserService.Object,
-                mockUserMapper.Object,
-                mockLogger.Object
-            );
+            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
 
             var result = await sut.Register(userDto);
             var expected = Assert.IsType<ActionResult<UserDto>>(result);

@@ -1,9 +1,7 @@
 using GolfMaxWebApi.Models.Entities;
-using Xunit;
 using Moq;
 using GolfMaxWebApi.Repositories.Interfaces;
 using GolfMaxWebApi.Services.Implementations;
-using Xunit.Abstractions;
 
 namespace GolfMaxWebApi.Tests.UnitTests.ServiceTests
 {
@@ -22,17 +20,17 @@ namespace GolfMaxWebApi.Tests.UnitTests.ServiceTests
             var actual = await sut.GetAll();
 
             Assert.Equal(
-                expected.Select(course => course.CourseName),
-                actual.Select(course => course.CourseName)
+                expected.Select(c => c.CourseName),
+                actual.Select(c => _course.CourseName)
             );
             Assert.Equal(
-                expected.Select(course => course.HoleLayouts.Count),
-                actual.Select(course => course.HoleLayouts.Count)
+                expected.Select(c => c.HoleLayouts.Count),
+                actual.Select(c => c.HoleLayouts.Count)
             );
             Assert.Equal(
-                expected.Select(course => course.HoleLayouts.Select(
+                expected.Select(c => c.HoleLayouts.Select(
                     holeLayouts => holeLayouts.Holes.Count)),
-                actual.Select(course => course.HoleLayouts.Select(
+                actual.Select(c => c.HoleLayouts.Select(
                     holeLayouts => holeLayouts.Holes.Count))
             );
             Assert.IsType<List<Course>>(actual);
@@ -57,13 +55,13 @@ namespace GolfMaxWebApi.Tests.UnitTests.ServiceTests
         public async void GetCourseById_ShouldReturn_CourseWithGivenId()
         {
             var mockRepo = new Mock<ICourseRepository>();
-            var expected = course;
+            var expected = _course;
 
             mockRepo.Setup(repo => repo.FindByCourseId(expected.Id))
                 .ReturnsAsync(expected);
 
             var sut = new CourseService(mockRepo.Object);
-            var actual = await sut.GetByCourseId(course.Id);
+            var actual = await sut.GetByCourseId(_course.Id);
 
             Assert.Equal(expected, actual);
             Assert.Equal(expected.Id, actual?.Id);
@@ -74,11 +72,11 @@ namespace GolfMaxWebApi.Tests.UnitTests.ServiceTests
         {
             var mockRepo = new Mock<ICourseRepository>();
 
-            mockRepo.Setup(repo => repo.FindByCourseId(course.Id))
+            mockRepo.Setup(repo => repo.FindByCourseId(_course.Id))
                 .ReturnsAsync(value: null);
 
             var sut = new CourseService(mockRepo.Object);
-            var result = await sut.GetByCourseId(course.Id);
+            var result = await sut.GetByCourseId(_course.Id);
 
             Assert.Null(result);
         }
@@ -87,13 +85,13 @@ namespace GolfMaxWebApi.Tests.UnitTests.ServiceTests
         public async void GetCourseByCourseName_ShouldReturn_CourseWithGivenCourseName()
         {
             var mockRepo = new Mock<ICourseRepository>();
-            var expected = course;
+            var expected = _course;
 
             mockRepo.Setup(repo => repo.FindByCourseName(expected.CourseName))
                 .ReturnsAsync(expected);
 
             var sut = new CourseService(mockRepo.Object);
-            var actual = await sut.GetByCourseName(course.CourseName);
+            var actual = await sut.GetByCourseName(_course.CourseName);
 
             Assert.Equal(expected, actual);
             Assert.Equal(expected.CourseName, actual?.CourseName);
@@ -104,22 +102,22 @@ namespace GolfMaxWebApi.Tests.UnitTests.ServiceTests
         {
             var mockRepo = new Mock<ICourseRepository>();
 
-            mockRepo.Setup(repo => repo.FindByCourseName(course.CourseName))
+            mockRepo.Setup(repo => repo.FindByCourseName(_course.CourseName))
                 .ReturnsAsync(value: null);
 
             var sut = new CourseService(mockRepo.Object);
-            var result = await sut.GetByCourseName(course.CourseName);
+            var result = await sut.GetByCourseName(_course.CourseName);
 
             Assert.Null(result);
         }
 
         [Fact]
-        public void CreateCouse_ShouldReturn_CreatedCourse()
+        public void CreateCourse_ShouldReturn_CreatedCourse()
         {
             throw new NotImplementedException();
         }
 
-        private readonly Course course = new Course
+        private readonly Course _course = new()
         {
             Id = 1,
             CourseName = "Vista",

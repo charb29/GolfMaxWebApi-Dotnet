@@ -1,4 +1,3 @@
-using Xunit;
 using GolfMaxWebApi.Models.Mappers.Implementations;
 using GolfMaxWebApi.Models.Dtos;
 using GolfMaxWebApi.Models.Entities;

@@ -1,3 +1,3 @@
 ﻿<Project>
-  <Import Project="..\buildMultiTargeting\GolfMaxWebApi.props" />
+  <Import Project="../buildMultiTargeting/GolfMaxWebApi.props" />
 </Project>

@@ -1,8 +1,6 @@
 using GolfMaxWebApi.Models.Entities;
 using GolfMaxWebApi.Repositories.Interfaces;
 using GolfMaxWebApi.Services.Interfaces;
-using System.Globalization;
-using System.Text.RegularExpressions;
 
 namespace GolfMaxWebApi.Services.Implementations
 {
@@ -12,10 +10,8 @@ namespace GolfMaxWebApi.Services.Implementations
 
         public CourseService(ICourseRepository courseRepository)
         {
-            if (courseRepository is null)
-                throw new ArgumentNullException(nameof(courseRepository));
-
-            _courseRepository = courseRepository;
+            _courseRepository = courseRepository ?? 
+                                throw new ArgumentNullException(nameof(courseRepository));
         }
 
         public async Task<IEnumerable<Course>> GetAll()

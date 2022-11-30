@@ -12,7 +12,8 @@ namespace GolfMaxWebApi.Services.Implementations
 
         public UserService(IUserRepository userRepository)
         {
-            _repository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
+            _repository = userRepository ?? 
+                          throw new ArgumentNullException(nameof(userRepository));
         }
 
         public async Task<IEnumerable<User>> GetAll()
@@ -46,14 +47,14 @@ namespace GolfMaxWebApi.Services.Implementations
 
         public async Task<bool> IsValidLoginRequest(User user)
         {
-            string username = user.Username;
+            var username = user.Username;
 
             if (username is null)
-                throw new ArgumentNullException(nameof(username));
+                throw new ArgumentNullException(nameof(user));
 
             var storedUser = await _repository.FindByUsername(username);
 
-            return user?.Password == storedUser?.Password;
+            return user.Password == storedUser?.Password;
         }
 
         public async Task<bool> IsValidRegistrationRequest(User user)
@@ -66,7 +67,7 @@ namespace GolfMaxWebApi.Services.Implementations
             return storedUser == null;
         }
 
-        private bool IsValidEmailFormat(string email)
+        private static bool IsValidEmailFormat(string email)
         {
             if (email == null)
                 throw new ArgumentNullException(nameof(email));
@@ -87,21 +88,18 @@ namespace GolfMaxWebApi.Services.Implementations
                 static string DomainMapper(Match match)
                 {
                     var idnMapping = new IdnMapping();
-                    string domainName = idnMapping.GetAscii(match.Groups[2].Value);
+                    var domainName = idnMapping.GetAscii(match.Groups[2].Value);
                     return match.Groups[1].Value + domainName;
                 }
             }
             catch (RegexMatchTimeoutException)
             {
                 return false;
-                throw new RegexMatchTimeoutException();
             }
             catch (ArgumentException)
             {
                 return false;
-                throw new ArgumentException();
             }
-
             try
             {
                 return Regex.IsMatch(
@@ -114,7 +112,6 @@ namespace GolfMaxWebApi.Services.Implementations
             catch (RegexMatchTimeoutException)
             {
                 return false;
-                throw new RegexMatchTimeoutException();
             }
         }
     }

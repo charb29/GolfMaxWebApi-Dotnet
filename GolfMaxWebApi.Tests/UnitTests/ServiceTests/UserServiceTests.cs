@@ -1,5 +1,4 @@
 using GolfMaxWebApi.Models.Entities;
-using Xunit;
 using Moq;
 using GolfMaxWebApi.Repositories.Interfaces;
 using GolfMaxWebApi.Services.Implementations;
@@ -123,7 +122,7 @@ namespace GolfMaxWebApi.Tests.UnitTests.ServiceTests
             var mockRepo = new Mock<IUserRepository>();
 
             mockRepo.Setup(repo => repo.DeleteById(It.IsAny<int>()))
-                    .Throws(new ArgumentNullException("id"));
+                    .Throws(new ArgumentNullException($"id"));
 
             var sut = new UserService(mockRepo.Object);
             var result = sut.DeleteById(It.IsAny<int>());

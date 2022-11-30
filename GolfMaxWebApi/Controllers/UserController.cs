@@ -13,11 +13,7 @@ namespace GolfMaxWebApi.Controllers
         private readonly IUserMapper _userMapper;
         private readonly ILogger<UserController> _logger;
 
-        public UserController(
-            IUserService userService,
-            IUserMapper userMapper,
-            ILogger<UserController> logger
-        )
+        public UserController(IUserService userService, IUserMapper userMapper, ILogger<UserController> logger)
         {
             _userService = userService ?? throw new ArgumentNullException(nameof(userService));
             _userMapper = userMapper;
@@ -38,7 +34,7 @@ namespace GolfMaxWebApi.Controllers
                 {
                     return NoContent();
                 }
-
+                
                 var userResponse = _userMapper.ConvertToUserDtoList(userRequest);
                 return Ok(userResponse);
             }
@@ -73,12 +69,9 @@ namespace GolfMaxWebApi.Controllers
                         }
                     );
                 }
-                else
-                {
-                    var userResponse = _userMapper.ConvertToUserDto(storedUser);
-
-                    return Ok(userResponse);
-                }
+                
+                var userResponse = _userMapper.ConvertToUserDto(storedUser);
+                return Ok(userResponse);
             }
             catch (Exception ex)
             {
@@ -140,11 +133,8 @@ namespace GolfMaxWebApi.Controllers
                         }
                     );
                 }
-                else
-                {
-                    await _userService.DeleteById(id);
-                    return Ok();
-                }
+                await _userService.DeleteById(id);
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -178,11 +168,8 @@ namespace GolfMaxWebApi.Controllers
                         }
                     );
                 }
-                else
-                {
-                    var userResponse = _userMapper.ConvertToUserDto(user);
-                    return Ok(userResponse);
-                }
+                var userResponse = _userMapper.ConvertToUserDto(user);
+                return Ok(userResponse);
             }
             catch (Exception ex)
             {
@@ -215,12 +202,9 @@ namespace GolfMaxWebApi.Controllers
                         }
                     );
                 }
-                else
-                {
-                    var createdUser = await _userService.Create(user);
-                    var userResponse = _userMapper.ConvertToUserDto(createdUser);
-                    return StatusCode(StatusCodes.Status201Created, userResponse);
-                }
+                var createdUser = await _userService.Create(user);
+                var userResponse = _userMapper.ConvertToUserDto(createdUser);
+                return StatusCode(StatusCodes.Status201Created, userResponse);
             }
             catch (Exception ex)
             {

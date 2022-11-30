@@ -177,7 +177,6 @@ C:/Users/laxlo/source/repos/GolfMaxWebApi/GolfMaxWebApi/obj/Debug/net6.0/ref/Gol
 /Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/bin/Debug/net6.0/GolfMaxWebApi.deps.json
 /Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/bin/Debug/net6.0/GolfMaxWebApi.runtimeconfig.json
 /Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/bin/Debug/net6.0/GolfMaxWebApi.dll
-/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/bin/Debug/net6.0/ref/GolfMaxWebApi.dll
 /Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/bin/Debug/net6.0/GolfMaxWebApi.pdb
 /Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/bin/Debug/net6.0/Azure.Core.dll
 /Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/bin/Debug/net6.0/Azure.Identity.dll
@@ -502,3 +501,9 @@ C:/Users/laxlo/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/scope
 C:/Users/laxlo/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/GolfMaxWebApi.csproj.CopyComplete
 C:/Users/laxlo/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/GolfMaxWebApi.genruntimeconfig.cache
 C:/Users/laxlo/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/ref/GolfMaxWebApi.dll
+/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/staticwebassets/msbuild.GolfMaxWebApi.Microsoft.AspNetCore.StaticWebAssets.props
+/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/staticwebassets/msbuild.build.GolfMaxWebApi.props
+/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/staticwebassets/msbuild.buildMultiTargeting.GolfMaxWebApi.props
+/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/staticwebassets/msbuild.buildTransitive.GolfMaxWebApi.props
+/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/staticwebassets.pack.json
+/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/Debug/net6.0/refint/GolfMaxWebApi.dll

@@ -12,10 +12,8 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public UserRepository(GolfMaxDataAccessor dataAccessor)
         {
-            if (dataAccessor is null)
-                throw new ArgumentNullException(nameof(dataAccessor));
-
-            _dataAccessor = dataAccessor;
+            _dataAccessor = dataAccessor ?? 
+                            throw new ArgumentNullException(nameof(dataAccessor));
         }
 
         public async Task<IEnumerable<User>> FindAll()
@@ -30,7 +28,8 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public async Task<User?> FindByUserId(int id)
         {
-            var query = "SELECT * FROM users WHERE id = @id";
+            const string query = "SELECT * FROM users u " +
+                                 "WHERE id = @id";
 
             using var connection = _dataAccessor.CreateConnection();
             var user = await connection.QuerySingleOrDefaultAsync<User>(query, new { id });
@@ -40,7 +39,8 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public async Task<User?> FindByUsername(string username)
         {
-            var query = "SELECT * FROM users u WHERE u.username = @username";
+            const string query = "SELECT * FROM users u " +
+                                 "WHERE u.username = @username";
 
             using var connection = _dataAccessor.CreateConnection();
             var user = await connection.QuerySingleOrDefaultAsync<User>(query, new { username });
@@ -50,7 +50,8 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public async Task<User?> FindByEmail(string email)
         {
-            var query = "SELECT * FROM users u WHERE u.email = @email";
+            const string query = "SELECT * FROM users u " +
+                                 "WHERE u.email = @email";
 
             using var connection = _dataAccessor.CreateConnection();
             var user = await connection.QuerySingleOrDefaultAsync(query, new { email });
@@ -60,9 +61,9 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public async Task<User> Save(User user)
         {
-            var query = "INSERT INTO users (first_name, last_name, username, password, email)"
-                + " VALUES (@FirstName, @LastName, @Username, @Password, @Email);"
-                + " SELECT LAST_INSERT_ID();";
+            const string query = "INSERT INTO users (first_name, last_name, username, password, email) " +
+                        "VALUES (@FirstName, @LastName, @Username, @Password, @Email) " +
+                        "SELECT LAST_INSERT_ID();";
 
             using var connection = _dataAccessor.CreateConnection();
             var id = await connection.QuerySingleAsync<int>(query, user);
@@ -80,13 +81,13 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public async Task Update(User user, int id)
         {
-            var query = "UPDATE users u SET"
-                + " u.first_name = @FirstName,"
-                + " u.last_name = @LastName,"
-                + " u.username = @Username,"
-                + " u.password = @Password,"
-                + " u.email = @Email"
-                + " WHERE u.id = @id";
+            const string query = "UPDATE users u SET " +
+                                 "u.first_name = @FirstName, " +
+                                 "u.last_name = @LastName,  " +
+                                 "u.username = @Username, " +
+                                 "u.password = @Password, " +
+                                 "u.email = @Email " +
+                                 "WHERE u.id = @id";
 
             var parameters = new DynamicParameters();
             parameters.Add("id", id, DbType.Int32);
@@ -102,7 +103,8 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public async Task DeleteById(int id)
         {
-            var query = "DELETE FROM users u WHERE u.id = @id";
+            const string query = "DELETE FROM users u " +
+                                 "WHERE u.id = @id";
 
             using var connection = _dataAccessor.CreateConnection();
             await connection.ExecuteAsync(query, new { id });
@@ -110,7 +112,8 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public async Task<User?> FindExistingUser(User user)
         {
-            var query = "SELECT * FROM users u WHERE u.username = @username OR u.email = @email";
+            const string query = "SELECT * FROM users u " +
+                                 "WHERE u.username = @username OR u.email = @email";
 
             var parameters = new DynamicParameters();
             parameters.Add("username", user.Username, DbType.String);
@@ -124,7 +127,8 @@ namespace GolfMaxWebApi.Repositories.Implementations
 
         public async Task<string?> GetPasswordUsingUsername(string username)
         {
-            var query = "SELECT u.password FROM users u WHERE u.username = @username";
+            const string query = "SELECT u.password FROM users u " +
+                                 "WHERE u.username = @username";
 
             var parameters = new DynamicParameters();
             parameters.Add("username", username, DbType.String);
