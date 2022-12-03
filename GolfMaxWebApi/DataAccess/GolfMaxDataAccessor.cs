@@ -1,18 +1,17 @@
 ﻿using System.Data;
 using MySql.Data.MySqlClient;
 
-namespace GolfMaxWebApi.DataAccess
+namespace GolfMaxWebApi.DataAccess;
+
+public class GolfMaxDataAccessor
 {
-    public class GolfMaxDataAccessor
+    private readonly string _connectionString;
+
+    public GolfMaxDataAccessor(IConfiguration config)
     {
-        private readonly string _connectionString;
-
-        public GolfMaxDataAccessor(IConfiguration config)
-        {
-            _connectionString = config.GetConnectionString("MySqlConnection");
-        }
-
-        public IDbConnection CreateConnection()
-            => new MySqlConnection(_connectionString);
+        _connectionString = config.GetConnectionString("MySqlConnection");
     }
+
+    public IDbConnection CreateConnection()
+        => new MySqlConnection(_connectionString);
 }

@@ -1,10 +1,9 @@
 using GolfMaxWebApi.Models.Entities;
 
-namespace GolfMaxWebApi.Repositories.Interfaces
+namespace GolfMaxWebApi.Repositories.Interfaces;
+
+public interface IHoleLayoutRepository
 {
-    public interface IHoleLayoutRepository
-    {
-        Task<IEnumerable<HoleLayout>> FindByCourseId(int id);
-        Task<IEnumerable<HoleLayout>> Save(IEnumerable<HoleLayout> holeLayouts);
-    }
+    Task<IEnumerable<HoleLayout>> FindByCourseId(int id);
+    Task<IEnumerable<HoleLayout>> Save(IEnumerable<HoleLayout> holeLayouts);
 }

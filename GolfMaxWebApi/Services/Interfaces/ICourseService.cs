@@ -1,14 +1,13 @@
 using GolfMaxWebApi.Models.Entities;
 
-namespace GolfMaxWebApi.Services.Interfaces
+namespace GolfMaxWebApi.Services.Interfaces;
+
+public interface ICourseService
 {
-    public interface ICourseService
-    {
-        Task<IEnumerable<Course>> GetAll();
-        Task<Course?> GetByCourseId(int id);
-        Task<Course?> GetByCourseName(string courseName);
-        Task<Course> CreateCourse(Course course);
-        Task<Course> UpdateCourse(Course course, int id);
-        Task DeleteById(int id);
-    }
+    Task<List<Course>> GetAllAsync();
+    Task<Course?> GetByCourseIdAsync(int id);
+    Task<Course?> GetByCourseNameAsync(string courseName);
+    Task<Course> CreateCourseAsync(Course course);
+    Task<Course> UpdateCourseAsync(Course course, int id);
+    Task DeleteByIdAsync(int id);
 }

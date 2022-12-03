@@ -1,160 +1,97 @@
-using Moq;
-using GolfMaxWebApi.Models.Entities;
-using GolfMaxWebApi.Services.Interfaces;
 using GolfMaxWebApi.Controllers;
 using GolfMaxWebApi.Models.Dtos;
 using GolfMaxWebApi.Models.Mappers.Interfaces;
-using Microsoft.Extensions.Logging;
+using GolfMaxWebApi.Services.Interfaces;
+using GolfMaxWebApi.Tests.MockObjects;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Moq;
 
-namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests
+namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests;
+
+public class UserControllerTests
 {
-    public class UserControllerTests
+    [Fact]
+    public async Task GetAllUsers_ShouldReturn_200Ok_IfUsersArePresent()
     {
-        [Fact]
-        public async Task GetAllUsers_ShouldReturn_200Ok()
-        {
-            var users = new List<User>
-            {
-                new User
-                {
-                    Id = 1,
-                    FirstName = "Kenny",
-                    LastName = "McCormick",
-                    Username = "kmc",
-                    Password = "password",
-                    Email = "kenny@email.com"
-                },
-                new User
-                {
-                    Id = 1,
-                    FirstName = "Stan",
-                    LastName = "Marsh",
-                    Username = "sm",
-                    Password = "password",
-                    Email = "stan@email.com"
-                },
-                new User
-                {
-                    Id = 1,
-                    FirstName = "Eric",
-                    LastName = "Cartman",
-                    Username = "ec",
-                    Password = "password",
-                    Email = "ec@email.com"
-                }
-            };
+        var mockUserService = new Mock<IUserService>();
+        var mockUserMapper = new Mock<IUserMapper>();
+        var mockLogger = new Mock<ILogger<UserController>>();
 
-            var mockUserService = new Mock<IUserService>();
-            var mockUserMapper = new Mock<IUserMapper>();
-            var mockLogger = new Mock<ILogger<UserController>>();
+        mockUserService.Setup(service => service.GetAllAsync()).ReturnsAsync(MockUser.Users());
 
-            mockUserService.Setup(service => service.GetAll()).ReturnsAsync(users);
+        var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
+        var result = await sut.GetAllUsers();
+        var expected = Assert.IsType<ActionResult<IEnumerable<UserDto>>>(result);
 
-            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
+        Assert.IsType<OkObjectResult>(expected.Result);
+    }
 
-            var result = await sut.GetAllUsers();
-            var expected = Assert.IsType<ActionResult<IEnumerable<UserDto>>>(result);
+    [Fact]
+    public async Task GetAllUsers_ShouldReturn_204NoContent_IfListIsNull()
+    {
+        var mockUserService = new Mock<IUserService>();
+        var mockUserMapper = new Mock<IUserMapper>();
+        var mockLogger = new Mock<ILogger<UserController>>();
 
-            Assert.IsType<OkObjectResult>(expected.Result);
-        }
+        mockUserService.Setup(service => service.GetAllAsync())!.ReturnsAsync(value: null);
 
-        [Fact]
-        public async Task GetAllUsers_ShouldReturn_204NoContent_IfListIsNull()
-        {
-            var mockUserService = new Mock<IUserService>();
-            var mockUserMapper = new Mock<IUserMapper>();
-            var mockLogger = new Mock<ILogger<UserController>>();
+        var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
+        var result = await sut.GetAllUsers();
+        var expected = Assert.IsType<ActionResult<IEnumerable<UserDto>>>(result);
 
-            mockUserService.Setup(service => service.GetAll())!.ReturnsAsync(value: null);
+        Assert.IsType<NoContentResult>(expected.Result);
+    }
 
-            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
+    [Fact]
+    public async Task GetUserById_ShouldReturn_200Ok_IfUserIsFound()
+    {
+        var mockUserService = new Mock<IUserService>();
+        var mockUserMapper = new Mock<IUserMapper>();
+        var mockLogger = new Mock<ILogger<UserController>>();
 
-            var result = await sut.GetAllUsers();
-            var expected = Assert.IsType<ActionResult<IEnumerable<UserDto>>>(result);
+        mockUserService.Setup(service => service.GetByIdAsync(MockUser.User().Id))
+            .ReturnsAsync(MockUser.User());
 
-            Assert.IsType<NoContentResult>(expected.Result);
-        }
+        var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
+        var result = await sut.GetUserById(MockUser.User().Id);
+        var expected = Assert.IsType<OkObjectResult>(result);
 
-        [Fact]
-        public async Task GetUserById_ShouldReturn_200OkIfUserIsFound()
-        {
-            var user = new User
-            {
-                FirstName = "Eric",
-                LastName = "Cartman",
-                Username = "ec",
-                Password = "password",
-                Email = "ec@email.com"
-            };
+        Assert.IsType<OkObjectResult>(expected);
+    }
 
-            var mockUserService = new Mock<IUserService>();
-            var mockUserMapper = new Mock<IUserMapper>();
-            var mockLogger = new Mock<ILogger<UserController>>();
+    [Fact]
+    public async Task GetUserById_ShouldReturn_404NotFound_IfNoUserFound()
+    {
+        var mockUserService = new Mock<IUserService>();
+        var mockUserMapper = new Mock<IUserMapper>();
+        var mockLogger = new Mock<ILogger<UserController>>();
 
-            mockUserService.Setup(service => service.GetById(1)).ReturnsAsync(user);
+        mockUserService.Setup(service => service.GetByIdAsync(1)).ReturnsAsync(value: null);
 
-            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
+        var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
+        var result = await sut.GetUserById(1);
+        var expected = Assert.IsType<ObjectResult>(result);
 
-            var result = await sut.GetUserById(1);
-            var expected = Assert.IsType<OkObjectResult>(result);
+        Assert.IsType<ObjectResult>(expected);
+    }
 
-            Assert.IsType<OkObjectResult>(expected);
-        }
+    [Fact]
+    public async Task CreateUser_ShouldReturn_CreatedAtRoute()
+    {
+        var mockUserService = new Mock<IUserService>();
+        var mockLogger = new Mock<ILogger<UserController>>();
+        var mockUserMapper = new Mock<IUserMapper>();
 
-        [Fact]
-        public async Task GetUserById_ShouldReturn_404NotFoundIfUserIsNotFound()
-        {
-            var mockUserService = new Mock<IUserService>();
-            var mockUserMapper = new Mock<IUserMapper>();
-            var mockLogger = new Mock<ILogger<UserController>>();
+        mockUserService.Setup(service => service.CreateAsync(MockUser.User()));
+        mockUserService.Setup(service => service.IsValidRegistrationRequestAsync(MockUser.User()))
+            .ReturnsAsync(true);
+        mockUserMapper.Setup(mapper => mapper.ConvertToEntity(MockUser.UserDto())).Returns(MockUser.User());
 
-            mockUserService.Setup(service => service.GetById(1)).ReturnsAsync(value: null);
+        var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
+        var result = await sut.Register(MockUser.UserDto());
+        var expected = Assert.IsType<ActionResult<UserDto>>(result);
 
-            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
-
-            var result = await sut.GetUserById(1);
-            var expected = Assert.IsType<ObjectResult>(result);
-
-            Assert.IsType<ObjectResult>(expected);
-        }
-
-        [Fact]
-        public async Task CreateUser_ShouldReturn_CreatedAtRoute()
-        {
-            var userDto = new UserDto
-            {
-                FirstName = "Randy",
-                LastName = "Marsh",
-                Username = "TegridyFarms",
-                Email = "tegridy@gmail.com",
-                Password = "Xmas-Special"
-            };
-            var user = new User
-            {
-                FirstName = "Randy",
-                LastName = "Marsh",
-                Username = "TegridyFarms",
-                Email = "tegridy@gmail.com",
-                Password = "Xmas-Special"
-            };
-
-            var mockUserService = new Mock<IUserService>();
-            var mockLogger = new Mock<ILogger<UserController>>();
-            var mockUserMapper = new Mock<IUserMapper>();
-
-            mockUserService.Setup(service => service.Create(user));
-            mockUserService
-                .Setup(service => service.IsValidRegistrationRequest(user))
-                .ReturnsAsync(true);
-            mockUserMapper.Setup(mapper => mapper.ConvertToEntity(userDto)).Returns(user);
-
-            var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
-
-            var result = await sut.Register(userDto);
-            var expected = Assert.IsType<ActionResult<UserDto>>(result);
-
-            Assert.IsType<ObjectResult>(expected.Result);
-        }
+        Assert.IsType<ObjectResult>(expected.Result);
     }
 }

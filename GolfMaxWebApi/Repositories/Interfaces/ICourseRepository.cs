@@ -1,14 +1,13 @@
 using GolfMaxWebApi.Models.Entities;
 
-namespace GolfMaxWebApi.Repositories.Interfaces
+namespace GolfMaxWebApi.Repositories.Interfaces;
+
+public interface ICourseRepository
 {
-    public interface ICourseRepository
-    {
-        Task<IEnumerable<Course>> FindAll();
-        Task<Course?> FindByCourseId(int id);
-        Task<Course?> FindByCourseName(string courseName);
-        Task<Course> Save(Course course);
-        Task Update(Course course, int id);
-        Task DeleteById(int id);
-    }
+    Task<IEnumerable<Course>> FindAllAsync();
+    Task<Course?> FindByCourseIdAsync(int id);
+    Task<Course?> FindByCourseNameAsync(string courseName);
+    Task<Course> SaveAsync(Course course);
+    Task UpdateAsync(Course course, int id);
+    Task DeleteByIdAsync(int id);
 }

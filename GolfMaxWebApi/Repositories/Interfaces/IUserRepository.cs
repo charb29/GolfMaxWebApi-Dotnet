@@ -1,17 +1,14 @@
 ﻿using GolfMaxWebApi.Models.Entities;
 
-namespace GolfMaxWebApi.Repositories.Interfaces
+namespace GolfMaxWebApi.Repositories.Interfaces;
+
+public interface  IUserRepository
 {
-    public interface IUserRepository
-    {
-        Task<IEnumerable<User>> FindAll();
-        Task<User?> FindByUserId(int id);
-        Task<User?> FindByUsername(string username);
-        Task<User?> FindByEmail(string email);
-        Task<User> Save(User user);
-        Task Update(User user, int id);
-        Task DeleteById(int id);
-        Task<User?> FindExistingUser(User user);
-        Task<string?> GetPasswordUsingUsername(string username);
-    }
+    Task<IEnumerable<User>> FindAllAsync();
+    Task<User?> FindByUserIdAsync(int id);
+    Task<User?> FindByUsernameAsync(string username);
+    Task<User> SaveAsync(User user);
+    Task UpdateAsync(User user, int id);
+    Task DeleteByIdAsync(int id);
+    Task<User?> FindExistingUserAsync(User user);
 }

@@ -1,9 +1,8 @@
-namespace GolfMaxWebApi.Models.Entities
+namespace GolfMaxWebApi.Models.Entities;
+
+public enum LayoutType
 {
-    public enum LayoutType
-    {
-        CHAMPIONSHIP,
-        MENS,
-        WOMEN
-    }
+    Championship,
+    Mens,
+    Women
 }

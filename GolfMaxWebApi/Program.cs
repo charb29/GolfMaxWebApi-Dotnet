@@ -17,14 +17,17 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
+
 builder.Services.AddScoped<IUserMapper, UserMapper>();
+builder.Services.AddScoped<ICourseMapper, CourseMapper>();
+
 builder.Services.AddScoped<GolfMaxDataAccessor>();
 
 
 var app = builder.Build();
-
-using var scope = app.Services.CreateScope();
 
 if (app.Environment.IsDevelopment())
 {

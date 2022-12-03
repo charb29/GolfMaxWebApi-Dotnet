@@ -1,14 +1,14 @@
-namespace GolfMaxWebApi.Models.Entities;
+using GolfMaxWebApi.Models.Entities;
 
-public class HoleLayout
+namespace GolfMaxWebApi.Models.Dtos;
+
+public class HoleLayoutDto
 {
-    public int Id { get; set; }
     public long Front9Yards { get; set; }
     public long Back9Yards { get; set; }
     public int OverallPar { get; set; }
     public double CourseRating { get; set; }
     public double SlopeRating { get; set; }
     public LayoutType LayoutType { get; set; }
-    public List<Hole> Holes { get; set; }
-    public int CourseId { get; set; }
+    public List<HoleDto> HoleDtos { get; set; } = null!;
 }
