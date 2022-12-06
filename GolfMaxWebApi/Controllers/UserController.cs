@@ -40,7 +40,8 @@ public class UserController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception {ex} caught attempting to fetch all List of Users", ex);
+            _logger.LogError("Exception caught attempting to fetch all List of Users - Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex.Message);
         }
     }
@@ -73,7 +74,8 @@ public class UserController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception {ex} attempting to retrieve user using Id {id}", ex, id);
+            _logger.LogError("Exception caught retrieving User by id - Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex.Message);
         }
     }
@@ -94,7 +96,8 @@ public class UserController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception {ex} caught attempting to update user using id {id}", ex, id);
+            _logger.LogError("Exception caught attempting to update user - Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex.Message);
         }
     }
@@ -126,7 +129,8 @@ public class UserController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception {ex} caught attempting to delete user using id {id}", ex, id);
+            _logger.LogError("Exception caught attempting to delete user - Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex.Message);
         }
     }
@@ -160,7 +164,8 @@ public class UserController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception {ex} caught attempting to login", ex);
+            _logger.LogError("Exception caught attempting to login - Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex.Message);
         }
     }
@@ -194,7 +199,8 @@ public class UserController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception {ex} caught attempting to create user", ex);
+            _logger.LogError("Exception caught attempting to create user - Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex.Message);
         }
     }

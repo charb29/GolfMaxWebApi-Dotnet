@@ -11,8 +11,7 @@ public class CourseRepository : ICourseRepository
 
     public CourseRepository(GolfMaxDataAccessor dataAccessor)
     {
-        _dataAccessor = dataAccessor ?? 
-                        throw new ArgumentNullException(nameof(dataAccessor));
+        _dataAccessor = dataAccessor ?? throw new ArgumentNullException(nameof(dataAccessor));
     }
 
     public async Task<IEnumerable<Course>> FindAllAsync()
@@ -59,37 +58,9 @@ public class CourseRepository : ICourseRepository
         return course;
     }
 
-    public async Task<Course> SaveAsync(Course course)
+    public Task<Course> SaveAsync(Course course)
     {
-        const string courseQuery = "INSERT INTO courses (course_name) " +
-                                   "VALUES (@CourseName); " +
-                                   "SELECT LAST_INSERT_ID();";
-
-        using var connection = _dataAccessor.CreateConnection();
-
-        var courseId = await connection.QuerySingleAsync<int>(courseQuery, course);
-        course.Id = courseId;
-
-        const string holeLayoutQuery = "INSERT INTO hole_layouts " +
-                                       "(front_9_yards, back_9_yards, overall_par," +
-                                       "course_rating, slope_rating, layout_type, course_id)" +
-                                       "VALUES (@Front9Yards, @Back9Yards, @OverallPar," +
-                                       " @CourseRating, @SlopeRating, @LayoutType, @CourseId);" +
-                                       "SELECT LAST_INSERT_ID();";
-
-        var holeLayoutId = await connection.QuerySingleAsync<int>(holeLayoutQuery, course.HoleLayouts);
-        course.HoleLayouts.Select(holeLayouts => holeLayouts.Id = holeLayoutId);
-
-        const string holeQuery = "INSERT INTO holes " +
-                                 "(hole_number, yards, par, course_id, hole_layout_id) " +
-                                 "VALUES (@HoleNumber, @Yards, @Par, @CourseId, @HoleLayoutId);" +
-                                 "SELECT_LAST_INSERT_ID();";
-
-        var holeId = await connection.QuerySingleAsync<int>(
-            holeQuery, course.HoleLayouts.SelectMany(holeLayout => holeLayout.Holes));
-        course.HoleLayouts.Select(hole => hole.Id = holeId);
-
-        return course;
+        throw new NotImplementedException();
     }
 
     public Task UpdateAsync(Course course, int id)

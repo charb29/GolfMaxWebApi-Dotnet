@@ -40,7 +40,8 @@ public class CourseController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Error retrieving all courses: {ex}", ex);
+            _logger.LogError("Error retrieving all courses - Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex);
         }
     }
@@ -73,7 +74,8 @@ public class CourseController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception {ex} thrown retrieving course using id: {id}", ex, id);
+            _logger.LogError("Exception caught retrieving user by id - Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex.Message);
         }
     }
@@ -115,7 +117,8 @@ public class CourseController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception {ex} caught attempting to delete course using id: {id}", ex, id);
+            _logger.LogError("Exception caught attempting to delete course using Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex.Message);
         }
     }
@@ -149,7 +152,8 @@ public class CourseController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError("Exception {ex} caught attempting to create new course", ex);
+            _logger.LogError("Exception caught attempting to create new course - Type: {ex}", ex.GetType());
+            _logger.LogError("Message: {ex}", ex.Message);
             return StatusCode(500, ex.Message);
         }
     }

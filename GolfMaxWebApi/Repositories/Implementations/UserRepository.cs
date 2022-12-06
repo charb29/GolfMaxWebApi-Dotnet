@@ -12,112 +12,80 @@ public class UserRepository : IUserRepository
 
     public UserRepository(GolfMaxDataAccessor dataAccessor)
     {
-        _dataAccessor = dataAccessor ??
-                        throw new ArgumentNullException(nameof(dataAccessor));
+        _dataAccessor = dataAccessor ?? throw new ArgumentNullException(nameof(dataAccessor));
     }
 
     public async Task<IEnumerable<User>> FindAllAsync()
     {
-        const string query = "SELECT * FROM users";
-
         using var connection = _dataAccessor.CreateConnection();
-        var users = await connection.QueryAsync<User>(query);
+        var users = await connection.QueryAsync<User>("GetAllUsers",
+            commandType: CommandType.StoredProcedure);
 
         return users;
     }
 
     public async Task<User?> FindByUserIdAsync(int id)
     {
-        const string query = "SELECT * FROM users u " +
-                             "WHERE id = @id";
-
         using var connection = _dataAccessor.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<User>(query, new { id });
+        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserById", new { id },
+            commandType: CommandType.StoredProcedure);
 
         return user;
     }
 
     public async Task<User?> FindByUsernameAsync(string username)
     {
-        const string query = "SELECT * FROM users u " +
-                             "WHERE u.username = @username";
-
         using var connection = _dataAccessor.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<User>(query, new { username });
+        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByUsername", new { username },
+            commandType: CommandType.StoredProcedure);
 
         return user;
     }
 
     public async Task<User?> FindByEmailAsync(string email)
     {
-        const string query = "SELECT * FROM users u " +
-                             "WHERE u.email = @email";
-
         using var connection = _dataAccessor.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync(query, new { email });
+        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByEmail", new { email },
+            commandType: CommandType.StoredProcedure);
 
         return user;
     }
 
     public async Task<User> SaveAsync(User user)
     {
-        const string query = "INSERT INTO users (first_name, last_name, username, password, email) " +
-                             "VALUES (@FirstName, @LastName, @Username, @Password, @Email);" +
-                             "SELECT LAST_INSERT_ID();";
-
         using var connection = _dataAccessor.CreateConnection();
-        var id = await connection.QuerySingleAsync<int>(query, user);
+        var id = await connection.QuerySingleAsync<int>("InsertNewUser", new { user },
+            commandType: CommandType.StoredProcedure);
 
         return new User
         {
             Id = id,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Email = user.Email,
             Username = user.Username,
-            Password = user.Password
+            Password = user.Password,
+            Email = user.Email
         };
     }
 
     public async Task UpdateAsync(User user, int id)
     {
-        const string query = "UPDATE users u SET " +
-                             "u.first_name = @FirstName, " +
-                             "u.last_name = @LastName,  " +
-                             "u.username = @Username, " +
-                             "u.password = @Password, " +
-                             "u.email = @Email " +
-                             "WHERE u.id = @id";
-
-        var parameters = new DynamicParameters();
-        parameters.Add("id", id, DbType.Int32);
-        parameters.Add("FirstName", user.FirstName, DbType.String);
-        parameters.Add("LastName", user.LastName, DbType.String);
-        parameters.Add("Username", user.Username, DbType.String);
-        parameters.Add("Password", user.Password, DbType.String);
-        parameters.Add("Email", user.Email, DbType.String);
-
         using var connection = _dataAccessor.CreateConnection();
-        await connection.ExecuteAsync(query, parameters);
+        await connection.ExecuteAsync("UpdateUser", new { user, id }, 
+                commandType: CommandType.StoredProcedure);
     }
 
     public async Task DeleteByIdAsync(int id)
     {
-        const string query = "DELETE FROM users u " +
-                             "WHERE u.id = @id";
-
         using var connection = _dataAccessor.CreateConnection();
-        await connection.ExecuteAsync(query, new { id });
+        await connection.ExecuteAsync("DeleteUser", new { id }, commandType: CommandType.StoredProcedure);
     }
 
     public async Task<User?> FindExistingUserAsync(User user)
     {
-        const string query = "SELECT * FROM users u " +
-                             "WHERE u.username = @Username " +
-                             "OR u.email = @Email";
-
         using var connection = _dataAccessor.CreateConnection();
-        var storedUser = await connection.QuerySingleOrDefaultAsync<User>(query, user);
+        var storedUser = await connection.QuerySingleOrDefaultAsync<User>("FindUser", new { user },
+            commandType: CommandType.StoredProcedure);
 
         return storedUser;
     }
