@@ -80,10 +80,10 @@ public class CourseRepository : ICourseRepository
         var holeLayoutId = await connection.QuerySingleAsync<int>(holeLayoutQuery, course.HoleLayouts);
         course.HoleLayouts.Select(holeLayouts => holeLayouts.Id = holeLayoutId);
 
-        const string  holeQuery = "INSERT INTO holes " +
-                                  "(hole_number, yards, par, course_id, hole_layout_id) " +
-                                  "VALUES (@HoleNumber, @Yards, @Par, @CourseId, @HoleLayoutId);" +
-                                  "SELECT_LAST_INSERT_ID();";
+        const string holeQuery = "INSERT INTO holes " +
+                                 "(hole_number, yards, par, course_id, hole_layout_id) " +
+                                 "VALUES (@HoleNumber, @Yards, @Par, @CourseId, @HoleLayoutId);" +
+                                 "SELECT_LAST_INSERT_ID();";
 
         var holeId = await connection.QuerySingleAsync<int>(
             holeQuery, course.HoleLayouts.SelectMany(holeLayout => holeLayout.Holes));
@@ -108,5 +108,17 @@ public class CourseRepository : ICourseRepository
 
         using var connection = _dataAccessor.CreateConnection();
         await connection.ExecuteAsync(query, new { id });
+    }
+
+    public async Task<Course?> FindExistingCourseAsync(Course course)
+    {
+        const string query = "SELECT * FROM courses c " +
+                             "WHERE c.course_name = @CourseName " +
+                             "OR c.id = @Id";
+
+        using var connection = _dataAccessor.CreateConnection();
+        var storedCourse = await connection.QuerySingleOrDefaultAsync<Course>(query, course);
+
+        return storedCourse;
     }
 }

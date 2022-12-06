@@ -6,7 +6,6 @@ using GolfMaxWebApi.Tests.MockObjects;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using CourseController = GolfMaxWebApi.Controllers.CourseController;
 
 namespace GolfMaxWebApi.Tests.UnitTests.ControllerTests;
 
@@ -39,7 +38,7 @@ public class CourseControllerTest
 
         var sut = new CourseController(mockCourseService.Object, mockCourseMapper.Object, mockLogger.Object);
         var result = await sut.GetAllCourses();
-        var expected = Assert.IsType<ActionResult<IEnumerable<UserDto>>>(result);
+        var expected = Assert.IsType<ActionResult<IEnumerable<CourseDto>>>(result);
 
         Assert.IsType<NoContentResult>(expected.Result);
     }
@@ -76,7 +75,7 @@ public class CourseControllerTest
 
         Assert.IsType<ObjectResult>(expected);
     }
-    
+
     [Fact]
     public async Task AddCourse_ShouldReturn_201Created()
     {
@@ -91,7 +90,7 @@ public class CourseControllerTest
         var result = await sut.AddCourse(MockCourse.CourseDto());
         var expected = Assert.IsType<ActionResult<CourseDto>>(result);
 
-        Assert.IsType<ObjectResult>(expected.Result);    
+        Assert.IsType<ObjectResult>(expected.Result);
     }
 
     [Fact]
@@ -108,6 +107,6 @@ public class CourseControllerTest
         var result = await sut.AddCourse(MockCourse.CourseDto());
         var expected = Assert.IsType<ActionResult<CourseDto>>(result);
 
-        Assert.IsType<UnauthorizedObjectResult>(expected.Result);      
+        Assert.IsType<ObjectResult>(expected.Result);
     }
 }

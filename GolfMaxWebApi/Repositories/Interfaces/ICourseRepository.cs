@@ -10,4 +10,5 @@ public interface ICourseRepository
     Task<Course> SaveAsync(Course course);
     Task UpdateAsync(Course course, int id);
     Task DeleteByIdAsync(int id);
+    Task<Course?> FindExistingCourseAsync(Course course);
 }

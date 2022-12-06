@@ -12,7 +12,7 @@ public class UserRepository : IUserRepository
 
     public UserRepository(GolfMaxDataAccessor dataAccessor)
     {
-        _dataAccessor = dataAccessor ?? 
+        _dataAccessor = dataAccessor ??
                         throw new ArgumentNullException(nameof(dataAccessor));
     }
 
@@ -75,7 +75,7 @@ public class UserRepository : IUserRepository
             LastName = user.LastName,
             Email = user.Email,
             Username = user.Username,
-            Password = user.Password,
+            Password = user.Password
         };
     }
 
@@ -113,30 +113,12 @@ public class UserRepository : IUserRepository
     public async Task<User?> FindExistingUserAsync(User user)
     {
         const string query = "SELECT * FROM users u " +
-                             "WHERE u.username = @username " +
-                             "OR u.email = @email";
-
-        var parameters = new DynamicParameters();
-        parameters.Add("username", user.Username, DbType.String);
-        parameters.Add("email", user.Email, DbType.String);
+                             "WHERE u.username = @Username " +
+                             "OR u.email = @Email";
 
         using var connection = _dataAccessor.CreateConnection();
-        var storedUser = await connection.QuerySingleOrDefaultAsync<User>(query, parameters);
+        var storedUser = await connection.QuerySingleOrDefaultAsync<User>(query, user);
 
         return storedUser;
-    }
-
-    public async Task<string?> GetPasswordUsingUsernameAsync(string username)
-    {
-        const string query = "SELECT u.password FROM users u " +
-                             "WHERE u.username = @username";
-
-        var parameters = new DynamicParameters();
-        parameters.Add("username", username, DbType.String);
-
-        using var connection = _dataAccessor.CreateConnection();
-        var storedPassword = await connection.QuerySingleOrDefaultAsync<string>(query, parameters);
-
-        return storedPassword;
     }
 }

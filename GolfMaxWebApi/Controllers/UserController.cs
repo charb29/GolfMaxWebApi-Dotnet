@@ -30,14 +30,12 @@ public class UserController : Controller
     {
         try
         {
-            var userRequest = await _userService.GetAllAsync();
+            var users = await _userService.GetAllAsync();
 
-            if (userRequest is null)
-            {
+            if (users is null) 
                 return NoContent();
-            }
-                
-            var userResponse = _userMapper.ConvertToUserDtoList(userRequest);
+
+            var userResponse = _userMapper.ConvertToUserDtoList(users);
             return Ok(userResponse);
         }
         catch (Exception ex)
@@ -56,10 +54,9 @@ public class UserController : Controller
     {
         try
         {
-            var storedUser = await _userService.GetByIdAsync(id);
+            var user = await _userService.GetByIdAsync(id);
 
-            if (storedUser is null)
-            {
+            if (user is null)
                 return new ObjectResult(
                     new ProblemDetails
                     {
@@ -70,9 +67,8 @@ public class UserController : Controller
                         Instance = HttpContext.Request.Path
                     }
                 );
-            }
-                
-            var userResponse = _userMapper.ConvertToUserDto(storedUser);
+
+            var userResponse = _userMapper.ConvertToUserDto(user);
             return Ok(userResponse);
         }
         catch (Exception ex)
@@ -99,16 +95,7 @@ public class UserController : Controller
         catch (Exception ex)
         {
             _logger.LogError("Exception {ex} caught attempting to update user using id {id}", ex, id);
-            return new ObjectResult(
-                new ProblemDetails
-                {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Type = $"https://localhost:7051/swagger/golfmax/User/{id}",
-                    Title = "Internal Error",
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path
-                }
-            );
+            return StatusCode(500, ex.Message);
         }
     }
 
@@ -123,7 +110,6 @@ public class UserController : Controller
             var user = await _userService.GetByIdAsync(id);
 
             if (user is null)
-            {
                 return new ObjectResult(
                     new ProblemDetails
                     {
@@ -134,7 +120,7 @@ public class UserController : Controller
                         Instance = HttpContext.Request.Path
                     }
                 );
-            }
+            
             await _userService.DeleteByIdAsync(id);
             return Ok();
         }
@@ -158,7 +144,6 @@ public class UserController : Controller
             var isValidRequest = await _userService.IsValidLoginRequestAsync(user);
 
             if (!isValidRequest)
-            {
                 return new ObjectResult(
                     new ProblemDetails
                     {
@@ -169,7 +154,7 @@ public class UserController : Controller
                         Instance = HttpContext.Request.Path
                     }
                 );
-            }
+            
             var userResponse = _userMapper.ConvertToUserDto(user);
             return Ok(userResponse);
         }
@@ -192,7 +177,6 @@ public class UserController : Controller
             var isValidRegistrationRequest = await _userService.IsValidRegistrationRequestAsync(user);
 
             if (!isValidRegistrationRequest)
-            {
                 return new ObjectResult(
                     new ProblemDetails
                     {
@@ -203,7 +187,7 @@ public class UserController : Controller
                         Instance = HttpContext.Request.Path
                     }
                 );
-            }
+            
             var createdUser = await _userService.CreateAsync(user);
             var userResponse = _userMapper.ConvertToUserDto(createdUser);
             return StatusCode(StatusCodes.Status201Created, userResponse);

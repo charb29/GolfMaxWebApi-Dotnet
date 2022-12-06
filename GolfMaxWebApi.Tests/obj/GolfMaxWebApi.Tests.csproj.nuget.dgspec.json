@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi.Tests/GolfMaxWebApi.Tests.csproj": {}
+    "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi.Tests\\GolfMaxWebApi.Tests.csproj": {}
   },
   "projects": {
-    "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi.Tests/GolfMaxWebApi.Tests.csproj": {
+    "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi.Tests\\GolfMaxWebApi.Tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi.Tests/GolfMaxWebApi.Tests.csproj",
+        "projectUniqueName": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi.Tests\\GolfMaxWebApi.Tests.csproj",
         "projectName": "GolfMaxWebApi.Tests",
-        "projectPath": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi.Tests/GolfMaxWebApi.Tests.csproj",
-        "packagesPath": "/Users/oliviercharbonneau/.nuget/packages/",
-        "outputPath": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi.Tests/obj/",
+        "projectPath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi.Tests\\GolfMaxWebApi.Tests.csproj",
+        "packagesPath": "C:\\Users\\laxlo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/oliviercharbonneau/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\laxlo\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -26,8 +26,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/GolfMaxWebApi.csproj": {
-                "projectPath": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/GolfMaxWebApi.csproj"
+              "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj": {
+                "projectPath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj"
               }
             }
           }
@@ -73,7 +73,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -82,21 +83,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/6.0.109/libexec/sdk/6.0.109/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/GolfMaxWebApi.csproj": {
+    "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/GolfMaxWebApi.csproj",
+        "projectUniqueName": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
         "projectName": "GolfMaxWebApi",
-        "projectPath": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/GolfMaxWebApi.csproj",
-        "packagesPath": "/Users/oliviercharbonneau/.nuget/packages/",
-        "outputPath": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/",
+        "projectPath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
+        "packagesPath": "C:\\Users\\laxlo\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/oliviercharbonneau/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\laxlo\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -189,7 +190,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -201,7 +203,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/6.0.109/libexec/sdk/6.0.109/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.403\\RuntimeIdentifierGraph.json"
         }
       }
     }
