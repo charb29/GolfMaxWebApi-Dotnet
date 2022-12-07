@@ -27,7 +27,7 @@ public class UserRepository : IUserRepository
     public async Task<User?> FindByUserIdAsync(int id)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserById", new { id },
+        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserById", new { Id = id },
             commandType: CommandType.StoredProcedure);
 
         return user;
@@ -36,7 +36,7 @@ public class UserRepository : IUserRepository
     public async Task<User?> FindByUsernameAsync(string username)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByUsername", new { username },
+        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByUsername", new { Username = username },
             commandType: CommandType.StoredProcedure);
 
         return user;
@@ -45,7 +45,7 @@ public class UserRepository : IUserRepository
     public async Task<User?> FindByEmailAsync(string email)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByEmail", new { email },
+        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByEmail", new { Email = email },
             commandType: CommandType.StoredProcedure);
 
         return user;
@@ -54,7 +54,7 @@ public class UserRepository : IUserRepository
     public async Task<User> SaveAsync(User user)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var id = await connection.QuerySingleAsync<int>("InsertNewUser", new { user },
+        var id = await connection.QuerySingleAsync<int>("InsertNewUser", new { User = user },
             commandType: CommandType.StoredProcedure);
 
         return new User
@@ -71,20 +71,20 @@ public class UserRepository : IUserRepository
     public async Task UpdateAsync(User user, int id)
     {
         using var connection = _dataAccessor.CreateConnection();
-        await connection.ExecuteAsync("UpdateUser", new { user, id }, 
+        await connection.ExecuteAsync("UpdateUser", new { User = user, Id = id }, 
                 commandType: CommandType.StoredProcedure);
     }
 
     public async Task DeleteByIdAsync(int id)
     {
         using var connection = _dataAccessor.CreateConnection();
-        await connection.ExecuteAsync("DeleteUser", new { id }, commandType: CommandType.StoredProcedure);
+        await connection.ExecuteAsync("DeleteUser", new { Id = id }, commandType: CommandType.StoredProcedure);
     }
 
     public async Task<User?> FindExistingUserAsync(User user)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var storedUser = await connection.QuerySingleOrDefaultAsync<User>("FindUser", new { user },
+        var storedUser = await connection.QuerySingleOrDefaultAsync<User>("FindExistingUser", new { User = user },
             commandType: CommandType.StoredProcedure);
 
         return storedUser;

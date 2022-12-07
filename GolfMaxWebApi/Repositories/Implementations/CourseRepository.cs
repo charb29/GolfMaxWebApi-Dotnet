@@ -1,3 +1,4 @@
+using System.Data;
 using Dapper;
 using GolfMaxWebApi.DataAccess;
 using GolfMaxWebApi.Models.Entities;
@@ -15,52 +16,42 @@ public class CourseRepository : ICourseRepository
     }
 
     public async Task<IEnumerable<Course>> FindAllAsync()
-    {
-        const string query = "SELECT * FROM courses c " +
-                             "INNER JOIN hole_layouts hl " +
-                             "ON c.id = hl.course_id " +
-                             "INNER JOIN holes h " +
-                             "ON c.id = h.course_id";
-
+    { 
         using var connection = _dataAccessor.CreateConnection();
-        var courses = await connection.QueryAsync<Course>(query);
+        var courses = await connection.QueryAsync<Course>("GetAllCourses", 
+            commandType: CommandType.StoredProcedure);
 
         return courses;
     }
 
     public async Task<Course?> FindByCourseIdAsync(int id)
     {
-        const string query = "SELECT * FROM courses c" +
-                             "INNER JOIN hole_layouts hl " +
-                             "ON c.id = hl.course_id " +
-                             "INNER JOIN holes h " +
-                             "ON c.id = h.course_id " +
-                             "WHERE c.id = @id";
-
         using var connection = _dataAccessor.CreateConnection();
-        var course = await connection.QuerySingleOrDefaultAsync<Course>(query, new { id });
+        var course = await connection.QuerySingleOrDefaultAsync<Course>("GetCourseById", 
+            new { Id = id },
+            commandType: CommandType.StoredProcedure);
 
         return course;
     }
 
     public async Task<Course?> FindByCourseNameAsync(string courseName)
     {
-        const string query = "SELECT * FROM courses c " +
-                             "INNER JOIN hole_layouts hl " +
-                             "ON c.id = hl.course_id " +
-                             "INNER JOIN holes h " +
-                             "ON c.id = h.course_id " +
-                             "WHERE c.course_name = @courseName";
-
         using var connection = _dataAccessor.CreateConnection();
-        var course = await connection.QuerySingleOrDefaultAsync<Course>(query, new { courseName });
+        var course = await connection.QuerySingleOrDefaultAsync<Course>("GetCourseByCourseName",
+            new { CourseName = courseName },
+            commandType: CommandType.StoredProcedure);
 
         return course;
     }
 
-    public Task<Course> SaveAsync(Course course)
+    public async Task<Course> SaveAsync(Course course)
     {
-        throw new NotImplementedException();
+        using var connection = _dataAccessor.CreateConnection();
+        var id = await connection.QuerySingleAsync<int>("InsertCourse", new { Course = course },
+            commandType: CommandType.StoredProcedure);
+
+        course.Id = id;
+        return course;
     }
 
     public Task UpdateAsync(Course course, int id)
@@ -70,26 +61,17 @@ public class CourseRepository : ICourseRepository
 
     public async Task DeleteByIdAsync(int id)
     {
-        const string query = "DELETE FROM courses c " +
-                             "INNER JOIN hole_layouts hl " +
-                             "ON c.id = hl.course_id" +
-                             "INNER JOIN holes h " +
-                             "ON c.id = h.course_id" +
-                             "WHERE c.id = @id";
-
         using var connection = _dataAccessor.CreateConnection();
-        await connection.ExecuteAsync(query, new { id });
+        await connection.ExecuteAsync("DeleteCourse", new { Id = id }, commandType: CommandType.StoredProcedure);
     }
 
     public async Task<Course?> FindExistingCourseAsync(Course course)
     {
-        const string query = "SELECT * FROM courses c " +
-                             "WHERE c.course_name = @CourseName " +
-                             "OR c.id = @Id";
-
         using var connection = _dataAccessor.CreateConnection();
-        var storedCourse = await connection.QuerySingleOrDefaultAsync<Course>(query, course);
+        var existingCourse = await connection.QuerySingleOrDefaultAsync<Course>("FindExistingCourse", 
+            new { Course = course },
+            commandType: CommandType.StoredProcedure);
 
-        return storedCourse;
+        return existingCourse;
     }
 }
