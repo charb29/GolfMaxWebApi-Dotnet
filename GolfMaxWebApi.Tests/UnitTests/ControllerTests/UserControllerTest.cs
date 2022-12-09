@@ -55,9 +55,9 @@ public class UserControllerTests
 
         var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
         var result = await sut.GetUserById(MockUser.User().Id);
-        var expected = Assert.IsType<OkObjectResult>(result);
+        var expected = Assert.IsType<ActionResult<UserDto>>(result);
 
-        Assert.IsType<OkObjectResult>(expected);
+        Assert.IsType<ActionResult<UserDto>>(expected);
     }
 
     [Fact]
@@ -71,9 +71,9 @@ public class UserControllerTests
 
         var sut = new UserController(mockUserService.Object, mockUserMapper.Object, mockLogger.Object);
         var result = await sut.GetUserById(1);
-        var expected = Assert.IsType<ObjectResult>(result);
+        var expected = Assert.IsType<ActionResult<UserDto>>(result);
 
-        Assert.IsType<ObjectResult>(expected);
+        Assert.IsType<ActionResult<UserDto>>(expected);
     }
 
     [Fact]
