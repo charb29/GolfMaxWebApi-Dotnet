@@ -18,6 +18,7 @@ public class UserRepository : IUserRepository
     public async Task<IEnumerable<User>> FindAllAsync()
     {
         using var connection = _dataAccessor.CreateConnection();
+        
         var users = await connection.QueryAsync<User>("GetAllUsers",
             commandType: CommandType.StoredProcedure);
 
@@ -27,16 +28,20 @@ public class UserRepository : IUserRepository
     public async Task<User?> FindByUserIdAsync(int id)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserById", new { Id = id },
-            commandType: CommandType.StoredProcedure);
 
+        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserById", 
+            new { Id = id }, 
+            commandType: CommandType.StoredProcedure);
+        
         return user;
     }
 
     public async Task<User?> FindByUsernameAsync(string username)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByUsername", new { Username = username },
+        
+        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByUsername", 
+            new { Username = username },
             commandType: CommandType.StoredProcedure);
 
         return user;
@@ -45,7 +50,9 @@ public class UserRepository : IUserRepository
     public async Task<User?> FindByEmailAsync(string email)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByEmail", new { Email = email },
+
+        var user = await connection.QuerySingleOrDefaultAsync<User>("GetUserByEmail", 
+            new { Email = email },
             commandType: CommandType.StoredProcedure);
 
         return user;
@@ -54,12 +61,20 @@ public class UserRepository : IUserRepository
     public async Task<User> SaveAsync(User user)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var id = await connection.QuerySingleAsync<int>("InsertNewUser", new { User = user },
+
+        var parameters = new DynamicParameters();
+        parameters.Add("FirstName", user.FirstName);
+        parameters.Add("LastName", user.LastName);
+        parameters.Add("Username", user.Username);
+        parameters.Add("Password", user.Password);
+        parameters.Add("Email", user.Email);
+        
+        var insertedId = await connection.QuerySingleAsync<int>("InsertUser", parameters,
             commandType: CommandType.StoredProcedure);
 
         return new User
         {
-            Id = id,
+            Id = insertedId,
             FirstName = user.FirstName,
             LastName = user.LastName,
             Username = user.Username,
@@ -71,20 +86,38 @@ public class UserRepository : IUserRepository
     public async Task UpdateAsync(User user, int id)
     {
         using var connection = _dataAccessor.CreateConnection();
-        await connection.ExecuteAsync("UpdateUser", new { User = user, Id = id }, 
-                commandType: CommandType.StoredProcedure);
+        
+        var parameters = new DynamicParameters();
+        parameters.Add("Username", user.Username);
+        parameters.Add("Password", user.Password);
+        parameters.Add("Email", user.Email);
+        parameters.Add("Id", id);
+        
+        await connection.ExecuteAsync("UpdateUser", 
+            parameters,
+            commandType: CommandType.StoredProcedure);
     }
 
     public async Task DeleteByIdAsync(int id)
     {
         using var connection = _dataAccessor.CreateConnection();
-        await connection.ExecuteAsync("DeleteUser", new { Id = id }, commandType: CommandType.StoredProcedure);
+        
+        await connection.ExecuteAsync("DeleteUser", 
+            new { Id = id }, 
+            commandType: CommandType.StoredProcedure);
     }
 
     public async Task<User?> FindExistingUserAsync(User user)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var storedUser = await connection.QuerySingleOrDefaultAsync<User>("FindExistingUser", new { User = user },
+        
+        var parameters = new DynamicParameters();
+        parameters.Add("Username", user.Username);
+        parameters.Add("Email", user.Email);
+        parameters.Add("Id", user.Id);
+        
+        var storedUser = await connection.QuerySingleOrDefaultAsync<User>("FindExistingUser", 
+            parameters,
             commandType: CommandType.StoredProcedure);
 
         return storedUser;
