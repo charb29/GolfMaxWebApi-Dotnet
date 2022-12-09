@@ -41,7 +41,8 @@ public class UserController : Controller
         catch (Exception ex)
         {
             _logger.LogError("Exception caught attempting to fetch all List of Users - Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
             return StatusCode(500, ex.Message);
         }
     }
@@ -51,7 +52,7 @@ public class UserController : Controller
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
-    public async Task<ActionResult> GetUserById(int id)
+    public async Task<ActionResult<UserDto>> GetUserById(int id)
     {
         try
         {
@@ -75,7 +76,8 @@ public class UserController : Controller
         catch (Exception ex)
         {
             _logger.LogError("Exception caught retrieving User by id - Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
             return StatusCode(500, ex.Message);
         }
     }
@@ -97,7 +99,8 @@ public class UserController : Controller
         catch (Exception ex)
         {
             _logger.LogError("Exception caught attempting to update user - Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
             return StatusCode(500, ex.Message);
         }
     }
@@ -130,7 +133,8 @@ public class UserController : Controller
         catch (Exception ex)
         {
             _logger.LogError("Exception caught attempting to delete user - Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
             return StatusCode(500, ex.Message);
         }
     }
@@ -165,7 +169,8 @@ public class UserController : Controller
         catch (Exception ex)
         {
             _logger.LogError("Exception caught attempting to login - Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
             return StatusCode(500, ex.Message);
         }
     }
@@ -186,7 +191,7 @@ public class UserController : Controller
                     new ProblemDetails
                     {
                         Status = StatusCodes.Status401Unauthorized,
-                        Type = "https://localhost:7051/swagger/golfmax/User/login",
+                        Type = "https://localhost:7051/swagger/golfmax/User/register",
                         Title = "Invalid Credentials",
                         Detail = "Username or password are already taken.",
                         Instance = HttpContext.Request.Path
@@ -200,7 +205,8 @@ public class UserController : Controller
         catch (Exception ex)
         {
             _logger.LogError("Exception caught attempting to create user - Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
             return StatusCode(500, ex.Message);
         }
     }
