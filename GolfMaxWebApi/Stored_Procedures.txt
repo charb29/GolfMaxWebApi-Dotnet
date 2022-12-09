@@ -1,0 +1,198 @@
+﻿create
+    definer = root@localhost procedure DeleteCourse()
+BEGIN 
+    DELETE FROM courses c
+    WHERE c.id = @id;
+END;
+
+create
+    definer = root@localhost procedure DeleteUser(IN Id int)
+BEGIN 
+    DELETE FROM users u
+    WHERE u.id = Id;
+END;
+
+create
+    definer = root@localhost procedure FindExistingCourse()
+BEGIN 
+    SELECT * FROM courses c 
+    WHERE c.course_name = @CourseName
+    OR c.id = @Id;
+END;
+
+create
+    definer = root@localhost procedure FindExistingUser(IN Username varchar(45), IN Email varchar(45), IN Id int)
+BEGIN
+    SELECT * FROM users u 
+    WHERE u.username = Username 
+    OR u.email = Email
+    OR u.id = Id;
+END;
+
+create
+    definer = root@localhost procedure GetAllCourses()
+BEGIN
+    SELECT * FROM courses c 
+    INNER JOIN hole_layouts hl 
+    ON c.id = hl.course_id
+    INNER JOIN holes h 
+    ON c.id = h.course_id;
+END;
+
+create
+    definer = root@localhost procedure GetAllUsers()
+BEGIN 
+    SELECT * FROM users;
+END;
+
+create
+    definer = root@localhost procedure GetCourseByCourseName()
+BEGIN 
+    SELECT * FROM courses c 
+    INNER JOIN hole_layouts hl
+    ON c.id = hl.course_id
+    INNER JOIN holes h 
+    ON c.id = h.course_id
+    WHERE c.course_name = @CourseName;
+END;
+
+create
+    definer = root@localhost procedure GetCourseById()
+BEGIN 
+    SELECT * FROM courses c 
+    INNER JOIN hole_layouts hl
+    ON c.id = hl.course_id
+    INNER JOIN holes h 
+    ON c.id = h.course_id
+    WHERE c.id = @id;
+END;
+
+create
+    definer = root@localhost procedure GetUserByEmail(IN Email varchar(45))
+BEGIN 
+    SELECT * FROM users u 
+    WHERE u.email = Email;
+END;
+
+create
+    definer = root@localhost procedure GetUserById(IN Id int)
+BEGIN
+    SELECT * FROM golfmaxdb.users u
+    WHERE u.id = Id;
+END;
+
+create
+    definer = root@localhost procedure GetUserByUsername(IN Username varchar(45))
+BEGIN 
+    SELECT * FROM users u 
+    WHERE u.username = Username;
+END;
+
+create
+    definer = root@localhost procedure InsertCourse()
+BEGIN
+    INSERT INTO courses (course_name)
+    VALUES (@CourseName);
+    SET @course_id = LAST_INSERT_ID();
+
+    INSERT INTO hole_layouts (front_9_yards, back_9_yards, overall_par, course_rating, slope_rating, layout_type, course_id)
+    VALUES (@Front9Yards, @Back9Yards, @OverallPar, @CourseRating, @SlopeRating, @LayoutType, @CourseId);
+    SET @HoleLayoutId = LAST_INSERT_ID();
+
+    INSERT INTO holes (yards, par, hole_number, course_id, hole_layout_id)
+    VALUES
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId);
+
+    INSERT INTO hole_layouts (front_9_yards, back_9_yards, overall_par, course_rating, slope_rating, layout_type, course_id)
+    VALUES (@Front9Yards, @Back9Yards, @OverallPar, @CourseRating, @SlopeRating, @LayoutType, @CourseId);
+    SET @HoleLayoutId = LAST_INSERT_ID();
+
+    INSERT INTO holes (yards, par, hole_number, course_id, hole_layout_id)
+    VALUES
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId);
+
+    INSERT INTO hole_layouts (front_9_yards, back_9_yards, overall_par, course_rating, slope_rating, layout_type, course_id)
+    VALUES (@Front9Yards, @Back9Yards, @OverallPar, @CourseRating, @SlopeRating, @LayoutType, @CourseId);
+    SET @HoleLayoutId = LAST_INSERT_ID();
+
+    INSERT INTO holes (yards, par, hole_number, course_id, hole_layout_id)
+    VALUES
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId),
+        (@Yards, @Par, @HoleNumber, @CourseId, @HoleLayoutId);
+END;
+
+create
+    definer = root@localhost procedure InsertUser(IN FirstName varchar(45), IN LastName varchar(45),
+                                                  IN Username varchar(45), IN Password varchar(45),
+                                                  IN Email varchar(45))
+BEGIN 
+    INSERT INTO users (first_name, last_name, username, password, email) 
+    VALUES (FirstName, LastName, Username, Password, Email);
+    SELECT LAST_INSERT_ID();
+END;
+
+create
+    definer = root@localhost procedure UpdateUser(IN Username varchar(45), IN Password varchar(45),
+                                                  IN Email varchar(45), IN Id int)
+BEGIN 
+    UPDATE users u 
+    SET
+        u.username = Username,
+        u.password = Password,
+        u.email = Email
+    WHERE u.id = Id;
+END;
+
