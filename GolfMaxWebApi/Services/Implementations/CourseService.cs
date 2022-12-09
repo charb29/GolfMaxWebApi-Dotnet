@@ -42,11 +42,6 @@ public class CourseService : ICourseService
         await _repository.DeleteByIdAsync(id);
     }
 
-    public Task<Course> UpdateCourseAsync(Course course, int id)
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<bool> IsCourseAlreadyCreatedAsync(Course course)
     {
         var storedCourse = await _repository.FindExistingCourseAsync(course);

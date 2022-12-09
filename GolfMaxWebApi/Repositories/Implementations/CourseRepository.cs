@@ -47,16 +47,12 @@ public class CourseRepository : ICourseRepository
     public async Task<Course> SaveAsync(Course course)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var id = await connection.QuerySingleAsync<int>("InsertCourse", new { Course = course },
+        var id = await connection.QuerySingleAsync<int>("InsertCourse", 
+            new { Course = course },
             commandType: CommandType.StoredProcedure);
 
         course.Id = id;
         return course;
-    }
-
-    public Task UpdateAsync(Course course, int id)
-    {
-        throw new NotImplementedException();
     }
 
     public async Task DeleteByIdAsync(int id)
