@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj": {}
+    "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/GolfMaxWebApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj": {
+    "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/GolfMaxWebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
+        "projectUniqueName": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/GolfMaxWebApi.csproj",
         "projectName": "GolfMaxWebApi",
-        "projectPath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\GolfMaxWebApi.csproj",
-        "packagesPath": "C:\\Users\\laxlo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\laxlo\\Desktop\\GolfMaxWebApi-Dotnet\\GolfMaxWebApi\\obj\\",
+        "projectPath": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/GolfMaxWebApi.csproj",
+        "packagesPath": "/Users/oliviercharbonneau/.nuget/packages/",
+        "outputPath": "/Users/oliviercharbonneau/Desktop/GolfMaxWebApi-Dotnet/GolfMaxWebApi/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\laxlo\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/Users/oliviercharbonneau/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
@@ -107,8 +107,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -120,7 +119,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet/6.0.109/libexec/sdk/6.0.109/RuntimeIdentifierGraph.json"
         }
       }
     }
