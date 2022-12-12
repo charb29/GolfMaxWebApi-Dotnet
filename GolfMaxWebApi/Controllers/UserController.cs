@@ -91,6 +91,20 @@ public class UserController : Controller
         try
         {
             var user = _userMapper.ConvertToEntity(userRequest);
+            var isValidUpdateRequest = await _userService.IsValidUpdateRequestAsync(user);
+            
+            if (!isValidUpdateRequest)
+                return new ObjectResult(
+                    new ProblemDetails
+                    {
+                        Status = StatusCodes.Status401Unauthorized,
+                        Type = "https://localhost:7051/swagger/golfmax/User/register",
+                        Title = "Invalid Credentials",
+                        Detail = "Username or email are already in use.",
+                        Instance = HttpContext.Request.Path
+                    }
+                );
+            
             var updatedUser = await _userService.UpdateAsync(user, id);
             var result = _userMapper.ConvertToUserDto(updatedUser);
 

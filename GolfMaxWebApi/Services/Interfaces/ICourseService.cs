@@ -4,7 +4,7 @@ namespace GolfMaxWebApi.Services.Interfaces;
 
 public interface ICourseService
 {
-    Task<List<Course>> GetAllAsync();
+    Task<IEnumerable<Course>> GetAllAsync();
     Task<Course?> GetByCourseIdAsync(int id);
     Task<Course?> GetByCourseNameAsync(string courseName);
     Task<Course> CreateCourseAsync(Course course);

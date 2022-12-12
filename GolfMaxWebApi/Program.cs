@@ -22,7 +22,6 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
 
 builder.Services.AddScoped<IUserMapper, UserMapper>();
-builder.Services.AddScoped<ICourseMapper, CourseMapper>();
 
 builder.Services.AddScoped<GolfMaxDataAccessor>();
 

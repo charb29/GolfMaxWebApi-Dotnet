@@ -6,16 +6,16 @@ namespace GolfMaxWebApi.Models.Mappers.Interfaces;
 public interface ICourseMapper
 {
     CourseDto ConvertToCourseDto(Course course);
-    List<CourseDto> ConvertToCourseDtoList(List<Course> courses);
+    ICollection<CourseDto> ConvertToCourseDtoList(IEnumerable<Course> courses);
     Course ConvertToCourseEntity(CourseDto courseDto);
         
     HoleLayoutDto ConvertToHoleLayoutDto(HoleLayout holeLayout);
-    List<HoleLayoutDto> ConvertToHoleLayoutDtoList(List<HoleLayout> holeLayouts);
+    ICollection<HoleLayoutDto> ConvertToHoleLayoutDtoList(IEnumerable<HoleLayout> holeLayouts);
     HoleLayout ConvertToHoleLayoutEntity(HoleLayoutDto holeLayoutDto);
-    List<HoleLayout> ConvertToHoleLayoutEntityList(List<HoleLayoutDto> holeLayoutDtos);
+    ICollection<HoleLayout> ConvertToHoleLayoutEntityList(IEnumerable<HoleLayoutDto> holeLayoutDtos);
 
     HoleDto ConvertToHoleDto(Hole hole);
-    List<HoleDto> ConvertToHoleDtoList(List<Hole> holes);
+    ICollection<HoleDto> ConvertToHoleDtoList(IEnumerable<Hole> holes);
     Hole ConvertToHoleEntity(HoleDto holeDto);
-    List<Hole> ConvertToHoleEntityList(List<HoleDto> holeDtos);
+    ICollection<Hole> ConvertToHoleEntityList(IEnumerable<HoleDto> holeDtos);
 }

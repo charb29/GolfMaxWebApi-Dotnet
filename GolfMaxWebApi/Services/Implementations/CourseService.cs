@@ -13,10 +13,10 @@ public class CourseService : ICourseService
         _repository = courseRepository ?? throw new ArgumentNullException(nameof(courseRepository));
     }
 
-    public async Task<List<Course>> GetAllAsync()
+    public async Task<IEnumerable<Course>> GetAllAsync()
     {
         var courses = await _repository.FindAllAsync();
-        return courses.ToList();
+        return courses;
     }
 
     public async Task<Course?> GetByCourseIdAsync(int id)

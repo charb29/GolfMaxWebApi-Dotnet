@@ -22,18 +22,15 @@ public class CourseServiceTests
 
         Assert.Equal(
             expected.Select(c => c.CourseName),
-            actual.Select(c => c.CourseName)
-        );
+            actual.Select(c => c.CourseName));
         Assert.Equal(
             expected.Select(c => c.HoleLayouts.Count),
-            actual.Select(c => c.HoleLayouts.Count)
-        );
+            actual.Select(c => c.HoleLayouts.Count));
         Assert.Equal(
             expected.Select(c => c.HoleLayouts.Select(
                 holeLayouts => holeLayouts.Holes.Count)),
             actual.Select(c => c.HoleLayouts.Select(
-                holeLayouts => holeLayouts.Holes.Count))
-        );
+                holeLayouts => holeLayouts.Holes.Count)));
         Assert.IsType<List<Course>>(actual);
     }
 

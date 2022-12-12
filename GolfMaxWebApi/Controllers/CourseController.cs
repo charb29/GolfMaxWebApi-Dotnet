@@ -1,5 +1,4 @@
-using GolfMaxWebApi.Models.Dtos;
-using GolfMaxWebApi.Models.Mappers.Interfaces;
+using GolfMaxWebApi.Models.Entities;
 using GolfMaxWebApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,15 +9,11 @@ namespace GolfMaxWebApi.Controllers;
 public class CourseController : Controller
 {
     private readonly ICourseService _courseService;
-    private readonly ICourseMapper _courseMapper;
     private readonly ILogger<CourseController> _logger;
 
-    public CourseController(ICourseService courseService, 
-                            ICourseMapper courseMapper,
-                            ILogger<CourseController> logger)
+    public CourseController(ICourseService courseService, ILogger<CourseController> logger)
     {
         _courseService = courseService ?? throw new ArgumentNullException(nameof(courseService));
-        _courseMapper = courseMapper;
         _logger = logger;
     }
 
@@ -26,7 +21,7 @@ public class CourseController : Controller
     [ProducesResponseType(200)]
     [ProducesResponseType(204)]
     [ProducesResponseType(500)]
-    public async Task<ActionResult<IEnumerable<CourseDto>>> GetAllCourses()
+    public async Task<ActionResult<IEnumerable<Course>>> GetAllCourses()
     {
         try
         {
@@ -35,14 +30,14 @@ public class CourseController : Controller
             if (courses is null) 
                 return NoContent();
 
-            var courseResponse = _courseMapper.ConvertToCourseDtoList(courses);
-            return Ok(courseResponse);
+            return Ok(courses);
         }
         catch (Exception ex)
         {
             _logger.LogError("Error retrieving all courses - Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
-            return StatusCode(500, ex);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
+            return StatusCode(500, ex.Message);
         }
     }
 
@@ -55,9 +50,9 @@ public class CourseController : Controller
     {
         try
         {
-            var course = await _courseService.GetByCourseIdAsync(id);
+            var retrievedCourse = await _courseService.GetByCourseIdAsync(id);
 
-            if (course is null)
+            if (retrievedCourse is null)
                 return new ObjectResult(
                     new ProblemDetails
                     {
@@ -69,13 +64,13 @@ public class CourseController : Controller
                     }
                 );
             
-            var courseResponse = _courseMapper.ConvertToCourseDto(course);
-            return Ok(courseResponse);
+            return Ok(retrievedCourse);
         }
         catch (Exception ex)
         {
             _logger.LogError("Exception caught retrieving user by id - Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
             return StatusCode(500, ex.Message);
         }
     }
@@ -84,7 +79,7 @@ public class CourseController : Controller
     [Route("{id}")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public Task<ActionResult> UpdateCourse(int id, CourseDto courseDto)
+    public Task<ActionResult> UpdateCourse(int id, Course course)
     {
         throw new NotImplementedException();
     }
@@ -118,7 +113,8 @@ public class CourseController : Controller
         catch (Exception ex)
         {
             _logger.LogError("Exception caught attempting to delete course using Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
             return StatusCode(500, ex.Message);
         }
     }
@@ -127,11 +123,10 @@ public class CourseController : Controller
     [Route("new")]
     [ProducesResponseType(201)]
     [ProducesResponseType(401)]
-    public async Task<ActionResult<CourseDto>> AddCourse(CourseDto courseDto)
+    public async Task<ActionResult<Course>> AddCourse(Course course)
     {
         try
         {
-            var course = _courseMapper.ConvertToCourseEntity(courseDto);
             var existingCourse = await _courseService.IsCourseAlreadyCreatedAsync(course);
 
             if (!existingCourse)
@@ -147,13 +142,13 @@ public class CourseController : Controller
                 );
 
             var createdCourse = await _courseService.CreateCourseAsync(course);
-            var courseResponse = _courseMapper.ConvertToCourseDto(createdCourse);
-            return StatusCode(StatusCodes.Status201Created, courseResponse);
+            return StatusCode(StatusCodes.Status201Created, createdCourse);
         }
         catch (Exception ex)
         {
             _logger.LogError("Exception caught attempting to create new course - Type: {ex}", ex.GetType());
-            _logger.LogError("Message: {ex}", ex.Message);
+            _logger.LogError("Source: {ex}", ex.Source);
+            _logger.LogError("StackTrace: {ex}", ex.StackTrace);
             return StatusCode(500, ex.Message);
         }
     }

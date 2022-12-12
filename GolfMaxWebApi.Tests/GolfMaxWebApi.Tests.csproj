@@ -26,4 +26,8 @@
     <ProjectReference Include="..\GolfMaxWebApi\GolfMaxWebApi.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="UnitTests\DtoMapperTests\CourseMapperTests.cs" />
+  </ItemGroup>
+
 </Project>

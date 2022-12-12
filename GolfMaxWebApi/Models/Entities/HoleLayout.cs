@@ -9,6 +9,6 @@ public class HoleLayout
     public double CourseRating { get; set; }
     public double SlopeRating { get; set; }
     public LayoutType LayoutType { get; set; }
-    public List<Hole> Holes { get; set; }
+    public ICollection<Hole> Holes { get; set; } = null!;
     public int CourseId { get; set; }
 }

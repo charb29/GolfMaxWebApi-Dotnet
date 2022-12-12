@@ -1,6 +1,5 @@
 using GolfMaxWebApi.Controllers;
-using GolfMaxWebApi.Models.Dtos;
-using GolfMaxWebApi.Models.Mappers.Interfaces;
+using GolfMaxWebApi.Models.Entities;
 using GolfMaxWebApi.Services.Interfaces;
 using GolfMaxWebApi.Tests.MockObjects;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +14,13 @@ public class CourseControllerTest
     public async Task GetAllCourses_ShouldReturn_200Ok_IfCoursesArePresent()
     {
         var mockCourseService = new Mock<ICourseService>();
-        var mockCourseMapper = new Mock<ICourseMapper>();
         var mockLogger = new Mock<ILogger<CourseController>>();
 
         mockCourseService.Setup(service => service.GetAllAsync()).ReturnsAsync(MockCourse.Courses());
 
-        var sut = new CourseController(mockCourseService.Object, mockCourseMapper.Object, mockLogger.Object);
+        var sut = new CourseController(mockCourseService.Object, mockLogger.Object);
         var result = await sut.GetAllCourses();
-        var expected = Assert.IsType<ActionResult<IEnumerable<CourseDto>>>(result);
+        var expected = Assert.IsType<ActionResult<IEnumerable<Course>>>(result);
 
         Assert.IsType<OkObjectResult>(expected.Result);
     }
@@ -31,14 +29,13 @@ public class CourseControllerTest
     public async Task GetAllCourses_ShouldReturn_204NoContent_IfListIsNull()
     {
         var mockCourseService = new Mock<ICourseService>();
-        var mockCourseMapper = new Mock<ICourseMapper>();
         var mockLogger = new Mock<ILogger<CourseController>>();
 
         mockCourseService.Setup(service => service.GetAllAsync())!.ReturnsAsync(value: null);
 
-        var sut = new CourseController(mockCourseService.Object, mockCourseMapper.Object, mockLogger.Object);
+        var sut = new CourseController(mockCourseService.Object, mockLogger.Object);
         var result = await sut.GetAllCourses();
-        var expected = Assert.IsType<ActionResult<IEnumerable<CourseDto>>>(result);
+        var expected = Assert.IsType<ActionResult<IEnumerable<Course>>>(result);
 
         Assert.IsType<NoContentResult>(expected.Result);
     }
@@ -47,13 +44,12 @@ public class CourseControllerTest
     public async Task GetCourseById_ShouldReturn_200Ok_IfCourseIsFound()
     {
         var mockCourseService = new Mock<ICourseService>();
-        var mockCourseMapper = new Mock<ICourseMapper>();
         var mockLogger = new Mock<ILogger<CourseController>>();
 
         mockCourseService.Setup(service => service.GetByCourseIdAsync(MockCourse.Course().Id))
             .ReturnsAsync(MockCourse.Course());
 
-        var sut = new CourseController(mockCourseService.Object, mockCourseMapper.Object, mockLogger.Object);
+        var sut = new CourseController(mockCourseService.Object, mockLogger.Object);
         var result = await sut.GetCourseById(MockCourse.Course().Id);
         var expected = Assert.IsType<OkObjectResult>(result);
 
@@ -64,12 +60,11 @@ public class CourseControllerTest
     public async Task GetCourseById_ShouldReturn_404NotFound_IfNoCourseFound()
     {
         var mockCourseService = new Mock<ICourseService>();
-        var mockCourseMapper = new Mock<ICourseMapper>();
         var mockLogger = new Mock<ILogger<CourseController>>();
 
         mockCourseService.Setup(service => service.GetByCourseIdAsync(1)).ReturnsAsync(value: null);
 
-        var sut = new CourseController(mockCourseService.Object, mockCourseMapper.Object, mockLogger.Object);
+        var sut = new CourseController(mockCourseService.Object, mockLogger.Object);
         var result = await sut.GetCourseById(1);
         var expected = Assert.IsType<ObjectResult>(result);
 
@@ -80,15 +75,14 @@ public class CourseControllerTest
     public async Task AddCourse_ShouldReturn_201Created()
     {
         var mockCourseService = new Mock<ICourseService>();
-        var mockCourseMapper = new Mock<ICourseMapper>();
         var mockLogger = new Mock<ILogger<CourseController>>();
 
         mockCourseService.Setup(service => service.CreateCourseAsync(MockCourse.Course()))
             .ReturnsAsync(MockCourse.Course());
 
-        var sut = new CourseController(mockCourseService.Object, mockCourseMapper.Object, mockLogger.Object);
-        var result = await sut.AddCourse(MockCourse.CourseDto());
-        var expected = Assert.IsType<ActionResult<CourseDto>>(result);
+        var sut = new CourseController(mockCourseService.Object, mockLogger.Object);
+        var result = await sut.AddCourse(MockCourse.Course());
+        var expected = Assert.IsType<ActionResult<Course>>(result);
 
         Assert.IsType<ObjectResult>(expected.Result);
     }
@@ -97,15 +91,14 @@ public class CourseControllerTest
     public async Task AddCourse_ShouldReturn_401UnAuthorized_IfCourseAlreadyExists()
     {
         var mockCourseService = new Mock<ICourseService>();
-        var mockCourseMapper = new Mock<ICourseMapper>();
         var mockLogger = new Mock<ILogger<CourseController>>();
 
         mockCourseService.Setup(service => service.CreateCourseAsync(MockCourse.Course()))
             .ReturnsAsync(MockCourse.Course());
 
-        var sut = new CourseController(mockCourseService.Object, mockCourseMapper.Object, mockLogger.Object);
-        var result = await sut.AddCourse(MockCourse.CourseDto());
-        var expected = Assert.IsType<ActionResult<CourseDto>>(result);
+        var sut = new CourseController(mockCourseService.Object, mockLogger.Object);
+        var result = await sut.AddCourse(MockCourse.Course());
+        var expected = Assert.IsType<ActionResult<Course>>(result);
 
         Assert.IsType<ObjectResult>(expected.Result);
     }

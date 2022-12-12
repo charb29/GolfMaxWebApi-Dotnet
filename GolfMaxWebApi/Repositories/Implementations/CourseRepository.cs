@@ -18,7 +18,8 @@ public class CourseRepository : ICourseRepository
     public async Task<IEnumerable<Course>> FindAllAsync()
     { 
         using var connection = _dataAccessor.CreateConnection();
-        var courses = await connection.QueryAsync<Course>("GetAllCourses", 
+
+        var courses = await connection.QueryAsync<Course>("GetAllCourses",
             commandType: CommandType.StoredProcedure);
 
         return courses;
@@ -27,7 +28,8 @@ public class CourseRepository : ICourseRepository
     public async Task<Course?> FindByCourseIdAsync(int id)
     {
         using var connection = _dataAccessor.CreateConnection();
-        var course = await connection.QuerySingleOrDefaultAsync<Course>("GetCourseById", 
+        
+        var course = await connection.QueryFirstOrDefaultAsync<Course>("GetCourseById", 
             new { Id = id },
             commandType: CommandType.StoredProcedure);
 
@@ -37,6 +39,7 @@ public class CourseRepository : ICourseRepository
     public async Task<Course?> FindByCourseNameAsync(string courseName)
     {
         using var connection = _dataAccessor.CreateConnection();
+        
         var course = await connection.QuerySingleOrDefaultAsync<Course>("GetCourseByCourseName",
             new { CourseName = courseName },
             commandType: CommandType.StoredProcedure);
@@ -47,50 +50,22 @@ public class CourseRepository : ICourseRepository
     public async Task<Course> SaveAsync(Course course)
     {
         using var connection = _dataAccessor.CreateConnection();
-        const string courseQuery = "INSERT INTO courses (course_name)" +
-                                   "VALUE (@CourseName);" +
-                                   "SELECT LAST_INSERT_ID()";
-        var insertedCourseId =
-            await connection.QuerySingleAsync<int>(courseQuery, new { CourseName = course.CourseName });
 
-        foreach (HoleLayout holeLayout in course.HoleLayouts)
-        {
-            const string holeLayoutQuery = "INSERT INTO hole_layouts (front_9_yards, back_9_yards, " +
-                                           "overall_par, course_rating, slope_rating, layout_type, course_id) " +
-                                           "VALUES (@Front9Yards, @Back9Yards, @OverallPar, @CourseRating, @SlopeRating, @LayoutType, @CourseId);" +
-                                           "SELECT LAST_INSERT_ID()";
-            var parameters = new DynamicParameters();
-            parameters.Add("Front9Yards", holeLayout.Front9Yards);
-            parameters.Add("Back9Yards", holeLayout.Back9Yards);
-            parameters.Add("OverallPar", holeLayout.OverallPar);
-            parameters.Add("CourseRating", holeLayout.CourseRating);
-            parameters.Add("SlopeRating", holeLayout.SlopeRating);
-            parameters.Add("LayoutType", holeLayout.LayoutType);
-            parameters.Add("CourseId", insertedCourseId);
-
-            var insertedHoleLayoutId = await connection.QuerySingleAsync<int>(holeLayoutQuery, parameters);
-
-            foreach (Hole hole in holeLayout)
-            {
-                const string holeQuery = "INSERT INTO holes (hole_number, yards, par, course_id, hole_layout_id) " +
-                                         "VALUES (@HoleNumber, @Yards, @Par, @CourseId, @HoleLayoutId)";
-                parameters.Add("HoleNumber", hole.HoleNumber);
-                parameters.Add("Yards", hole.Yards);
-                parameters.Add("Par", hole.Par);
-                parameters.Add("CourseId", insertedCourseId);
-                parameters.Add("HoleLayoutId", insertedHoleLayoutId);
-            }
-        }
+        var insertedCourseId = await connection.QuerySingleAsync<int>("InsertCourse", 
+            new { course.CourseName },
+            commandType: CommandType.StoredProcedure);
+        
+        await SaveHoleLayoutsAsync(course.HoleLayouts, insertedCourseId);
 
         return new Course
         {
             Id = insertedCourseId,
             CourseName = course.CourseName,
-            HoleLayouts = course.HoleLayout
+            HoleLayouts = course.HoleLayouts
         };
     }
 
-    public async Task UpdateAsync(Course course)
+    public Task UpdateAsync(Course course)
     {
         throw new NotImplementedException();
     }
@@ -98,6 +73,7 @@ public class CourseRepository : ICourseRepository
     public async Task DeleteByIdAsync(int id)
     {
         using var connection = _dataAccessor.CreateConnection();
+        
         await connection.ExecuteAsync("DeleteCourse", 
             new { Id = id }, 
             commandType: CommandType.StoredProcedure);
@@ -116,5 +92,47 @@ public class CourseRepository : ICourseRepository
             commandType: CommandType.StoredProcedure);
 
         return existingCourse;
+    }
+    
+    private async Task SaveHoleLayoutsAsync(IEnumerable<HoleLayout> holeLayouts, int insertedCourseId)
+    {
+        var connection = _dataAccessor.CreateConnection();
+        
+        foreach (var holeLayout in holeLayouts)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("Front9Yards", holeLayout.Front9Yards);
+            parameters.Add("Back9Yards", holeLayout.Back9Yards);
+            parameters.Add("OverallPar", holeLayout.OverallPar);
+            parameters.Add("CourseRating", holeLayout.CourseRating);
+            parameters.Add("SlopeRating", holeLayout.SlopeRating);
+            parameters.Add("LayoutType", holeLayout.LayoutType);
+            parameters.Add("CourseId", insertedCourseId);
+
+            var insertedHoleLayoutId = await connection.QuerySingleAsync<int>("InsertHoleLayout", 
+                parameters,
+                commandType: CommandType.StoredProcedure);
+            
+            await SaveHolesAsync(holeLayout.Holes, insertedHoleLayoutId, insertedCourseId);
+        }
+    }
+
+    private async Task SaveHolesAsync(IEnumerable<Hole> holes, int insertedHoleLayoutId, int insertedCourseId)
+    {
+        var connection = _dataAccessor.CreateConnection();
+        
+        foreach (var hole in holes)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("HoleNumber", hole.HoleNumber);
+            parameters.Add("Yards", hole.Yards);
+            parameters.Add("Par", hole.Par);
+            parameters.Add("CourseId", insertedCourseId);
+            parameters.Add("HoleLayoutId", insertedHoleLayoutId);
+
+            await connection.QueryAsync<int>("InsertHole", 
+                parameters,
+                commandType: CommandType.StoredProcedure);
+        }
     }
 }

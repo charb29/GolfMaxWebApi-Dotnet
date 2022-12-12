@@ -11,4 +11,5 @@ public interface IUserService
     Task DeleteByIdAsync(int id);
     Task<bool> IsValidRegistrationRequestAsync(User user);
     Task<bool> IsValidLoginRequestAsync(User user);
+    Task<bool> IsValidUpdateRequestAsync(User user);
 }

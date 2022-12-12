@@ -14,8 +14,8 @@ public class CourseMapperTests
 
         Assert.Equal(expected.CourseName, actual.CourseName);
         Assert.Equal(
-            (expected.HoleLayouts ?? throw new InvalidOperationException()).Count(),
-            (actual.HoleLayouts ?? throw new InvalidOperationException()).Count());
+            (expected.HoleLayouts ?? throw new InvalidOperationException()).Count,
+            (actual.HoleLayouts ?? throw new InvalidOperationException()).Count);
         Assert.Equal(
             expected.HoleLayouts.Select(holeLayoutDto =>
                 (holeLayoutDto.HoleDtos ?? throw new InvalidOperationException()).Count),
@@ -30,11 +30,13 @@ public class CourseMapperTests
         var sut = new CourseMapper();
         var actual = sut.ConvertToCourseDtoList(MockCourse.Courses());
 
-        Assert.Equal(expected.Count(), actual.Count());
-        Assert.Equal(expected.Select(course => course.CourseName), actual.Select(course => course.CourseName));
+        Assert.Equal(expected.Count, actual.Count);
         Assert.Equal(
-            expected.Select(course => course.HoleLayouts.Count()),
-            actual.Select(course => course.HoleLayouts.Count()));
+            expected.Select(course => course.CourseName), 
+            actual.Select(course => course.CourseName));
+        Assert.Equal(
+            expected.Select(course => course.HoleLayouts.Count),
+            actual.Select(course => course.HoleLayouts.Count));
     }
 
     [Fact]
@@ -46,7 +48,8 @@ public class CourseMapperTests
 
         Assert.Equal(expected.CourseName, actual.CourseName);
         Assert.Equal(expected.HoleLayouts.Count, actual.HoleLayouts.Count);
-        Assert.Equal(expected.HoleLayouts.Select(holeLayout => holeLayout.Holes.Count),
+        Assert.Equal(
+            expected.HoleLayouts.Select(holeLayout => holeLayout.Holes.Count),
             actual.HoleLayouts.Select(holeLayout => holeLayout.Holes.Count));
     }
 
@@ -63,9 +66,14 @@ public class CourseMapperTests
         Assert.Equal(expected.SlopeRating, actual.SlopeRating);
         Assert.Equal(expected.LayoutType, actual.LayoutType);
         Assert.Equal(expected.OverallPar, actual.OverallPar);
-        Assert.Equal(expected.HoleDtos.Select(hole => hole.Par), actual.HoleDtos.Select(hole => hole.Par));
-        Assert.Equal(expected.HoleDtos.Select(hole => hole.Yards), actual.HoleDtos.Select(hole => hole.Yards));
-        Assert.Equal(expected.HoleDtos.Select(hole => hole.HoleNumber),
+        Assert.Equal(
+            expected.HoleDtos.Select(hole => hole.Par), 
+            actual.HoleDtos.Select(hole => hole.Par));
+        Assert.Equal(
+            expected.HoleDtos.Select(hole => hole.Yards), 
+            actual.HoleDtos.Select(hole => hole.Yards));
+        Assert.Equal(
+            expected.HoleDtos.Select(hole => hole.HoleNumber),
             actual.HoleDtos.Select(hole => hole.HoleNumber));
     }
 
@@ -76,31 +84,25 @@ public class CourseMapperTests
         var sut = new CourseMapper();
         var actual = sut.ConvertToHoleLayoutDtoList(MockCourse.HoleLayouts());
 
-        Assert.Equal(expected.Count(), actual.Count());
+        Assert.Equal(expected.Count, actual.Count);
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.Front9Yards),
-            actual.Select(holeLayout => holeLayout.Front9Yards)
-        );
+            actual.Select(holeLayout => holeLayout.Front9Yards));
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.Back9Yards),
-            actual.Select(holeLayout => holeLayout.Back9Yards)
-        );
+            actual.Select(holeLayout => holeLayout.Back9Yards));
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.CourseRating),
-            actual.Select(holeLayout => holeLayout.CourseRating)
-        );
+            actual.Select(holeLayout => holeLayout.CourseRating));
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.SlopeRating),
-            actual.Select(holeLayout => holeLayout.SlopeRating)
-        );
+            actual.Select(holeLayout => holeLayout.SlopeRating));
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.LayoutType),
-            actual.Select(holeLayout => holeLayout.LayoutType)
-        );
+            actual.Select(holeLayout => holeLayout.LayoutType));
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.OverallPar),
-            actual.Select(holeLayout => holeLayout.OverallPar)
-        );
+            actual.Select(holeLayout => holeLayout.OverallPar));
     }
 
     [Fact]
@@ -138,9 +140,15 @@ public class CourseMapperTests
         var actual = sut.ConvertToHoleDtoList(MockCourse.Holes());
 
         Assert.Equal(expected.Count, actual.Count);
-        Assert.Equal(expected.Select(hole => hole.Par), actual.Select(hole => hole.Par));
-        Assert.Equal(expected.Select(hole => hole.Yards), actual.Select(hole => hole.Yards));
-        Assert.Equal(expected.Select(hole => hole.HoleNumber), actual.Select(hole => hole.HoleNumber));
+        Assert.Equal(
+            expected.Select(hole => hole.Par), 
+            actual.Select(hole => hole.Par));
+        Assert.Equal(
+            expected.Select(hole => hole.Yards), 
+            actual.Select(hole => hole.Yards));
+        Assert.Equal(
+            expected.Select(hole => hole.HoleNumber), 
+            actual.Select(hole => hole.HoleNumber));
     }
 
     [Fact]
@@ -163,9 +171,15 @@ public class CourseMapperTests
         var actual = sut.ConvertToHoleEntityList(MockCourse.HoleDtos());
 
         Assert.Equal(expected.Count, actual.Count);
-        Assert.Equal(expected.Select(hole => hole.Par), actual.Select(hole => hole.Par));
-        Assert.Equal(expected.Select(hole => hole.Yards), actual.Select(hole => hole.Yards));
-        Assert.Equal(expected.Select(hole => hole.HoleNumber), actual.Select(hole => hole.HoleNumber));
+        Assert.Equal(
+            expected.Select(hole => hole.Par), 
+            actual.Select(hole => hole.Par));
+        Assert.Equal(
+            expected.Select(hole => hole.Yards), 
+            actual.Select(hole => hole.Yards));
+        Assert.Equal(
+            expected.Select(hole => hole.HoleNumber), 
+            actual.Select(hole => hole.HoleNumber));
     }
 
     [Fact]
@@ -178,23 +192,18 @@ public class CourseMapperTests
         Assert.Equal(expected.Count, actual.Count);
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.Front9Yards),
-            actual.Select(holeLayout => holeLayout.Front9Yards)
-        );
+            actual.Select(holeLayout => holeLayout.Front9Yards));
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.Back9Yards),
-            actual.Select(holeLayout => holeLayout.Back9Yards)
-        );
+            actual.Select(holeLayout => holeLayout.Back9Yards));
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.CourseRating),
-            actual.Select(holeLayout => holeLayout.CourseRating)
-        );
+            actual.Select(holeLayout => holeLayout.CourseRating));
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.SlopeRating),
-            actual.Select(holeLayout => holeLayout.SlopeRating)
-        );
+            actual.Select(holeLayout => holeLayout.SlopeRating));
         Assert.Equal(
             expected.Select(holeLayout => holeLayout.OverallPar),
-            actual.Select(holeLayout => holeLayout.OverallPar)
-        );
+            actual.Select(holeLayout => holeLayout.OverallPar));
     }
 }

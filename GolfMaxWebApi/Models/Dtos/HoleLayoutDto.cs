@@ -10,5 +10,5 @@ public class HoleLayoutDto
     public double CourseRating { get; set; }
     public double SlopeRating { get; set; }
     public LayoutType LayoutType { get; set; }
-    public List<HoleDto> HoleDtos { get; set; } = null!;
+    public ICollection<HoleDto> HoleDtos { get; set; } = null!;
 }

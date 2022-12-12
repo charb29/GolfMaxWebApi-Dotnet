@@ -15,10 +15,10 @@ public class CourseMapper : ICourseMapper
         };
     }
 
-    public List<CourseDto> ConvertToCourseDtoList(List<Course> courses)
+    public ICollection<CourseDto> ConvertToCourseDtoList(IEnumerable<Course> courses)
     {
-        var courseDtos = courses.Select(ConvertToCourseDto).ToList();
-        return courseDtos;
+        var courseDtos = courses.Select(ConvertToCourseDto);
+        return courseDtos.ToList();
     }
 
     public Course ConvertToCourseEntity(CourseDto courseDto)
@@ -58,16 +58,16 @@ public class CourseMapper : ICourseMapper
         };
     }
 
-    public List<HoleLayout> ConvertToHoleLayoutEntityList(List<HoleLayoutDto> holeLayoutDtos)
+    public ICollection<HoleLayout> ConvertToHoleLayoutEntityList(IEnumerable<HoleLayoutDto> holeLayoutDtos)
     {
-        var holeLayouts = holeLayoutDtos.Select(ConvertToHoleLayoutEntity).ToList();
-        return holeLayouts;
+        var holeLayouts = holeLayoutDtos.Select(ConvertToHoleLayoutEntity);
+        return holeLayouts.ToList();
     }
 
-    public List<HoleLayoutDto> ConvertToHoleLayoutDtoList(List<HoleLayout> holeLayouts)
+    public ICollection<HoleLayoutDto> ConvertToHoleLayoutDtoList(IEnumerable<HoleLayout> holeLayouts)
     {
-        var holeLayoutDtos = holeLayouts.Select(ConvertToHoleLayoutDto).ToList();
-        return holeLayoutDtos;
+        var holeLayoutDtos = holeLayouts.Select(ConvertToHoleLayoutDto);
+        return holeLayoutDtos.ToList();
     }
 
     public Hole ConvertToHoleEntity(HoleDto holeDto)
@@ -90,15 +90,15 @@ public class CourseMapper : ICourseMapper
         };
     }
 
-    public List<Hole> ConvertToHoleEntityList(List<HoleDto> holeDtos)
+    public ICollection<Hole> ConvertToHoleEntityList(IEnumerable<HoleDto> holeDtos)
     {
-        var holes = holeDtos.Select(ConvertToHoleEntity).ToList();
-        return holes;
+        var holes = holeDtos.Select(ConvertToHoleEntity);
+        return holes.ToList();
     }
 
-    public List<HoleDto> ConvertToHoleDtoList(List<Hole> holes)
+    public ICollection<HoleDto> ConvertToHoleDtoList(IEnumerable<Hole> holes)
     {
-        var holeDtos = holes.Select(ConvertToHoleDto).ToList();
-        return holeDtos;
+        var holeDtos = holes.Select(ConvertToHoleDto);
+        return holeDtos.ToList();
     }
 }

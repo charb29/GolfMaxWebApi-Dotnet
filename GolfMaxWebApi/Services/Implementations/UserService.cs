@@ -66,6 +66,12 @@ public class UserService : IUserService
         return storedUser == null;
     }
 
+    public async Task<bool> IsValidUpdateRequestAsync(User user)
+    {
+        var existingUserCredentials = await _repository.FindExistingUserAsync(user);
+        return existingUserCredentials == null;
+    }
+
     private static bool IsValidEmailFormat(string email)
     {
         if (email == null)
