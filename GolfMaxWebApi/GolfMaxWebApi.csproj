@@ -35,6 +35,8 @@
 	  <Compile Remove="Models\Dtos\CourseDto.cs" />
 	  <Compile Remove="Models\Dtos\HoleLayoutDto.cs" />
 	  <Compile Remove="Models\Dtos\HoleDto.cs" />
+	  <Compile Remove="DataAccess\CourseDataMapper.cs" />
+	  <Compile Remove="DataAccess\ICourseDataMapper.cs" />
 	</ItemGroup>
 
 </Project>
