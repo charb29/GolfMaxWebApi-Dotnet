@@ -9,20 +9,43 @@ namespace GolfMaxWebApi.Repositories.Implementations;
 public class CourseRepository : ICourseRepository
 {
     private readonly GolfMaxDataAccessor _dataAccessor;
+    private readonly IHoleLayoutRepository _holeLayoutRepository;
+    private readonly IHoleRepository _holeRepository;
 
-    public CourseRepository(GolfMaxDataAccessor dataAccessor)
+    public CourseRepository(GolfMaxDataAccessor dataAccessor, 
+                            IHoleLayoutRepository holeLayoutRepository,
+                            IHoleRepository holeRepository)
     {
         _dataAccessor = dataAccessor ?? throw new ArgumentNullException(nameof(dataAccessor));
+        _holeLayoutRepository = holeLayoutRepository;
+        _holeRepository = holeRepository;
     }
 
     public async Task<IEnumerable<Course>> FindAllAsync()
     { 
         using var connection = _dataAccessor.CreateConnection();
-
+        
         var courses = await connection.QueryAsync<Course>("GetAllCourses",
             commandType: CommandType.StoredProcedure);
 
-        return courses;
+        var retrievedCourses = courses.ToList();
+        foreach (var course in retrievedCourses)
+        {
+            var holeLayouts = await _holeLayoutRepository.FindByCourseIdAsync(course.Id);
+            var retrievedHoleLayouts = holeLayouts.ToList();
+
+            foreach (var holeLayout in retrievedHoleLayouts)
+            {
+                var holes = await _holeRepository.FindByCourseAndHoleLayoutIdAsync(holeLayout.Id);
+                var retrievedHoles = holes.ToList();
+
+                holeLayout.Holes = retrievedHoles;
+            }
+
+            course.HoleLayouts = retrievedHoleLayouts;
+        }
+        
+        return retrievedCourses;
     }
 
     public async Task<Course?> FindByCourseIdAsync(int id)
@@ -30,8 +53,7 @@ public class CourseRepository : ICourseRepository
         using var connection = _dataAccessor.CreateConnection();
         
         var course = await connection.QueryFirstOrDefaultAsync<Course>("GetCourseById", 
-            new { Id = id },
-            commandType: CommandType.StoredProcedure);
+            new { Id = id }, commandType: CommandType.StoredProcedure);
 
         return course;
     }
@@ -41,8 +63,7 @@ public class CourseRepository : ICourseRepository
         using var connection = _dataAccessor.CreateConnection();
         
         var course = await connection.QuerySingleOrDefaultAsync<Course>("GetCourseByCourseName",
-            new { CourseName = courseName },
-            commandType: CommandType.StoredProcedure);
+            new { CourseName = courseName }, commandType: CommandType.StoredProcedure);
 
         return course;
     }
@@ -52,10 +73,9 @@ public class CourseRepository : ICourseRepository
         using var connection = _dataAccessor.CreateConnection();
 
         var insertedCourseId = await connection.QuerySingleAsync<int>("InsertCourse", 
-            new { course.CourseName },
-            commandType: CommandType.StoredProcedure);
+            new { course.CourseName }, commandType: CommandType.StoredProcedure);
         
-        await SaveHoleLayoutsAsync(course.HoleLayouts, insertedCourseId);
+        await _holeLayoutRepository.SaveAsync(course.HoleLayouts, insertedCourseId);
 
         return new Course
         {
@@ -75,8 +95,7 @@ public class CourseRepository : ICourseRepository
         using var connection = _dataAccessor.CreateConnection();
         
         await connection.ExecuteAsync("DeleteCourse", 
-            new { Id = id }, 
-            commandType: CommandType.StoredProcedure);
+            new { Id = id }, commandType: CommandType.StoredProcedure);
     }
 
     public async Task<Course?> FindExistingCourseAsync(Course course)
@@ -88,51 +107,8 @@ public class CourseRepository : ICourseRepository
         parameters.Add("Id", course.Id);
         
         var existingCourse = await connection.QuerySingleOrDefaultAsync<Course>("FindExistingCourse",
-            parameters,
-            commandType: CommandType.StoredProcedure);
+            parameters, commandType: CommandType.StoredProcedure);
 
         return existingCourse;
-    }
-    
-    private async Task SaveHoleLayoutsAsync(IEnumerable<HoleLayout> holeLayouts, int insertedCourseId)
-    {
-        var connection = _dataAccessor.CreateConnection();
-        
-        foreach (var holeLayout in holeLayouts)
-        {
-            var parameters = new DynamicParameters();
-            parameters.Add("Front9Yards", holeLayout.Front9Yards);
-            parameters.Add("Back9Yards", holeLayout.Back9Yards);
-            parameters.Add("OverallPar", holeLayout.OverallPar);
-            parameters.Add("CourseRating", holeLayout.CourseRating);
-            parameters.Add("SlopeRating", holeLayout.SlopeRating);
-            parameters.Add("LayoutType", holeLayout.LayoutType);
-            parameters.Add("CourseId", insertedCourseId);
-
-            var insertedHoleLayoutId = await connection.QuerySingleAsync<int>("InsertHoleLayout", 
-                parameters,
-                commandType: CommandType.StoredProcedure);
-            
-            await SaveHolesAsync(holeLayout.Holes, insertedHoleLayoutId, insertedCourseId);
-        }
-    }
-
-    private async Task SaveHolesAsync(IEnumerable<Hole> holes, int insertedHoleLayoutId, int insertedCourseId)
-    {
-        var connection = _dataAccessor.CreateConnection();
-        
-        foreach (var hole in holes)
-        {
-            var parameters = new DynamicParameters();
-            parameters.Add("HoleNumber", hole.HoleNumber);
-            parameters.Add("Yards", hole.Yards);
-            parameters.Add("Par", hole.Par);
-            parameters.Add("CourseId", insertedCourseId);
-            parameters.Add("HoleLayoutId", insertedHoleLayoutId);
-
-            await connection.QueryAsync<int>("InsertHole", 
-                parameters,
-                commandType: CommandType.StoredProcedure);
-        }
     }
 }

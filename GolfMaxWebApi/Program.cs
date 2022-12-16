@@ -17,6 +17,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<IHoleLayoutRepository, HoleLayoutRepository>();
+builder.Services.AddScoped<IHoleRepository, HoleRepository>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICourseService, CourseService>();
