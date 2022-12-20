@@ -24,8 +24,12 @@ public class HoleLayoutRepository : IHoleLayoutRepository
         var holeLayouts = await connection.QueryAsync<HoleLayout>("GetHoleLayoutsByCourseId", 
             new { CourseId = courseId }, commandType: CommandType.StoredProcedure);
 
-        if (holeLayouts is null) throw new NullReferenceException("Attempting to query non-existing data.");
-
+        foreach (var holeLayout in holeLayouts)
+        {
+            var holes = await _holeRepository.FindByHoleLayoutIdAsync(holeLayout.Id);
+            holeLayout.Holes = holes.ToList();
+        }
+        
         return holeLayouts;
     }
 

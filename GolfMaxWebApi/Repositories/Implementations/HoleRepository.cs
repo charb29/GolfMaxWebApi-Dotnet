@@ -15,11 +15,11 @@ public class HoleRepository : IHoleRepository
         _dataAccessor = dataAccessor;
     }
 
-    public async Task<IEnumerable<Hole>> FindByCourseAndHoleLayoutIdAsync(int holeLayoutId)
+    public async Task<IEnumerable<Hole>> FindByHoleLayoutIdAsync(int holeLayoutId)
     {
         using var connection = _dataAccessor.CreateConnection();
 
-        var holes = await connection.QueryAsync<Hole>("GetHolesByCourseAndHoleLayoutId",
+        var holes = await connection.QueryAsync<Hole>("GetHolesByHoleLayoutId",
             new { HoleLayoutId = holeLayoutId }, commandType: CommandType.StoredProcedure);
         
         return holes;

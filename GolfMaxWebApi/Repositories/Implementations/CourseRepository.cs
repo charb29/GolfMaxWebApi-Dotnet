@@ -28,24 +28,8 @@ public class CourseRepository : ICourseRepository
         var courses = await connection.QueryAsync<Course>("GetAllCourses",
             commandType: CommandType.StoredProcedure);
 
-        var retrievedCourses = courses.ToList();
-        foreach (var course in retrievedCourses)
-        {
-            var holeLayouts = await _holeLayoutRepository.FindByCourseIdAsync(course.Id);
-            var retrievedHoleLayouts = holeLayouts.ToList();
-
-            foreach (var holeLayout in retrievedHoleLayouts)
-            {
-                var holes = await _holeRepository.FindByCourseAndHoleLayoutIdAsync(holeLayout.Id);
-                var retrievedHoles = holes.ToList();
-
-                holeLayout.Holes = retrievedHoles;
-            }
-
-            course.HoleLayouts = retrievedHoleLayouts;
-        }
-        
-        return retrievedCourses;
+        await AddCourseAttributesAsync(courses);
+        return courses;
     }
 
     public async Task<Course?> FindByCourseIdAsync(int id)
@@ -54,7 +38,9 @@ public class CourseRepository : ICourseRepository
         
         var course = await connection.QueryFirstOrDefaultAsync<Course>("GetCourseById", 
             new { Id = id }, commandType: CommandType.StoredProcedure);
-
+        var holeLayouts = await _holeLayoutRepository.FindByCourseIdAsync(course.Id);
+        
+        course.HoleLayouts = holeLayouts.ToList();
         return course;
     }
 
@@ -64,7 +50,9 @@ public class CourseRepository : ICourseRepository
         
         var course = await connection.QuerySingleOrDefaultAsync<Course>("GetCourseByCourseName",
             new { CourseName = courseName }, commandType: CommandType.StoredProcedure);
+        var holeLayouts = await _holeLayoutRepository.FindByCourseIdAsync(course.Id);
 
+        course.HoleLayouts = holeLayouts.ToList();
         return course;
     }
 
@@ -110,5 +98,20 @@ public class CourseRepository : ICourseRepository
             parameters, commandType: CommandType.StoredProcedure);
 
         return existingCourse;
+    }
+    
+    private async Task AddCourseAttributesAsync(IEnumerable<Course> courses)
+    {
+        foreach (var course in courses)
+        {
+            var holeLayouts = await _holeLayoutRepository.FindByCourseIdAsync(course.Id);
+            foreach (var holeLayout in holeLayouts)
+            {
+                var holes = await _holeRepository.FindByHoleLayoutIdAsync(holeLayout.Id);
+                holeLayout.Holes = holes.ToList();
+            }
+            
+            course.HoleLayouts = holeLayouts.ToList();
+        }
     }
 }
